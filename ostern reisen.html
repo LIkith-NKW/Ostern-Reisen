@@ -1,0 +1,6182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hero — India Heritage Slider</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Poppins for the bold display title; Inter for UI -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@1,9..144,300;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/gh/darkroomengineering/lenis@latest/bundled/lenis.js"></script>
+    <style>
+      :root {
+        --bg: #fff2e2; /* warm cream */
+        --bg-deep: #f4e3cd; /* deeper warm cream */
+        --ink: #1f1a14; /* deep warm ink */
+        --ink-soft: #6b5f4e;
+        --accent: #c7551e; /* terracotta accent (small UI bits only) */
+        --card: #ffffff;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        min-height: 100vh;
+        display: block;
+        padding: 0;
+      }
+
+      /* ============ NAV BAR (sticky, full-width) ============ */
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        width: 100%;
+        background: rgba(255, 242, 226, 0.82);
+        backdrop-filter: saturate(140%) blur(14px);
+        -webkit-backdrop-filter: saturate(140%) blur(14px);
+        border-radius: 0;
+        border-bottom: 1px solid rgba(31, 26, 20, 0.08);
+        padding: 14px 56px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        box-shadow: 0 4px 20px -16px rgba(31, 26, 20, 0);
+        transition:
+          box-shadow 0.2s ease,
+          background 0.2s ease;
+      }
+      .nav.scrolled {
+        background: rgba(255, 242, 226, 0.95);
+        box-shadow: 0 8px 30px -20px rgba(31, 26, 20, 0.18);
+      }
+      .nav .brand {
+        font-family: "Poppins", sans-serif;
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .nav .brand .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--accent);
+        display: inline-block;
+        box-shadow: 0 0 0 4px rgba(199, 85, 30, 0.18);
+      }
+      .nav .brand i {
+        font-style: italic;
+        font-weight: 500;
+        color: var(--accent);
+      }
+
+      .nav ul.menu {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .nav ul.menu > li {
+        position: relative;
+      }
+      .nav ul.menu > li > a {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--ink);
+        text-decoration: none;
+        padding: 10px 16px;
+        border-radius: 999px;
+        transition:
+          background 0.2s ease,
+          color 0.2s ease;
+        position: relative;
+      }
+      .nav ul.menu > li > a:hover {
+        background: rgba(199, 85, 30, 0.08);
+        color: var(--accent);
+      }
+      .nav ul.menu > li > a.active {
+        background: var(--ink);
+        color: #fff;
+      }
+      .nav ul.menu > li > a.active:hover {
+        background: var(--ink);
+        color: #fff;
+      }
+      .nav ul.menu > li > a .chev {
+        transition: transform 0.25s ease;
+      }
+      .nav ul.menu > li.has-drop:hover > a .chev,
+      .nav ul.menu > li.has-drop.open > a .chev {
+        transform: rotate(180deg);
+      }
+
+      /* dropdown */
+      .dropdown {
+        position: absolute;
+        top: calc(100% + 14px);
+        left: 50%;
+        transform: translateX(-50%) translateY(8px);
+        background: #fff;
+        border-radius: 18px;
+        padding: 10px;
+        min-width: 260px;
+        box-shadow:
+          0 24px 50px -16px rgba(31, 26, 20, 0.25),
+          0 4px 12px rgba(31, 26, 20, 0.08);
+        border: 1px solid rgba(31, 26, 20, 0.06);
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.25s ease,
+          transform 0.25s ease;
+        z-index: 200;
+      }
+      .dropdown::before {
+        content: "";
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        transform: translateX(-50%) rotate(45deg);
+        width: 12px;
+        height: 12px;
+        background: #fff;
+        border-left: 1px solid rgba(31, 26, 20, 0.06);
+        border-top: 1px solid rgba(31, 26, 20, 0.06);
+      }
+      .nav ul.menu > li.has-drop:hover .dropdown,
+      .nav ul.menu > li.has-drop.open .dropdown {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(-50%) translateY(0);
+      }
+      .dropdown a {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        text-decoration: none;
+        color: var(--ink);
+        transition: background 0.15s ease;
+      }
+      .dropdown a:hover {
+        background: rgba(199, 85, 30, 0.08);
+      }
+      .dropdown a .icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: var(--bg);
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        color: var(--accent);
+      }
+      .dropdown a .info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .dropdown a .info b {
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+      .dropdown a .info span {
+        font-size: 12px;
+        color: var(--ink-soft);
+        line-height: 1.4;
+      }
+
+      .nav .actions {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .nav .icon-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: transparent;
+        border: 1px solid rgba(31, 26, 20, 0.12);
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        color: var(--ink);
+        transition:
+          background 0.2s ease,
+          color 0.2s ease,
+          border-color 0.2s ease;
+      }
+      .nav .icon-btn:hover {
+        background: var(--ink);
+        color: #fff;
+        border-color: var(--ink);
+      }
+      .nav .nav-cta {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 13px 22px;
+        border-radius: 999px;
+        background: var(--ink);
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition:
+          background 0.2s ease,
+          transform 0.2s ease;
+      }
+      .nav .nav-cta:hover {
+        background: var(--accent);
+        transform: translateY(-1px);
+      }
+
+      /* hamburger (mobile only) */
+      .nav .burger {
+        display: none;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: #fff;
+        border: 0;
+        cursor: pointer;
+        place-items: center;
+      }
+
+      @media (max-width: 980px) {
+        .nav {
+          padding: 12px 20px;
+        }
+        .nav ul.menu {
+          display: none;
+        }
+        .nav .actions .icon-btn {
+          display: none;
+        }
+        .nav .nav-cta {
+          display: none;
+        }
+        .nav .burger {
+          display: grid;
+        }
+
+        /* mobile slide-down menu */
+        .nav .mobile-menu {
+          position: absolute;
+          top: calc(100% + 10px);
+          left: 0;
+          right: 0;
+          background: #fff;
+          border-radius: 22px;
+          padding: 12px;
+          box-shadow: 0 24px 50px -16px rgba(31, 26, 20, 0.25);
+          display: none;
+          flex-direction: column;
+          gap: 4px;
+          border: 1px solid rgba(31, 26, 20, 0.06);
+          z-index: 150;
+        }
+        .nav .mobile-menu.open {
+          display: flex;
+        }
+        .nav .mobile-menu a {
+          padding: 14px 16px;
+          border-radius: 14px;
+          font-family: "Poppins", sans-serif;
+          font-size: 15px;
+          font-weight: 500;
+          color: var(--ink);
+          text-decoration: none;
+        }
+        .nav .mobile-menu a:hover,
+        .nav .mobile-menu a.active {
+          background: var(--bg);
+          color: var(--accent);
+        }
+        .nav .mobile-menu .group {
+          padding: 4px 16px 8px;
+          font-size: 11px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: var(--ink-soft);
+          margin-top: 6px;
+        }
+      }
+      @media (min-width: 981px) {
+        .nav .mobile-menu {
+          display: none !important;
+        }
+      }
+
+      /* ============ HERO (full-bleed) ============ */
+      .hero {
+        width: 100%;
+        max-width: none;
+        background: var(--bg);
+        border-radius: 0;
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 48px;
+        align-items: center;
+        padding: 88px 96px;
+        min-height: 720px;
+      }
+
+      /* faint dot grid texture */
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(
+          rgba(31, 26, 20, 0.08) 1px,
+          transparent 1px
+        );
+        background-size: 26px 26px;
+        mask-image: radial-gradient(
+          ellipse at 75% 50%,
+          transparent 25%,
+          #000 80%
+        );
+        -webkit-mask-image: radial-gradient(
+          ellipse at 75% 50%,
+          transparent 25%,
+          #000 80%
+        );
+        pointer-events: none;
+      }
+
+      .left {
+        position: relative;
+        z-index: 3;
+      }
+
+      /* eyebrow */
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--ink);
+        font-weight: 600;
+        margin-bottom: 32px;
+        background: rgba(255, 255, 255, 0.6);
+        padding: 10px 16px;
+        border-radius: 999px;
+        border: 1px solid rgba(31, 26, 20, 0.1);
+      }
+      .eyebrow .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 0 4px rgba(199, 85, 30, 0.18);
+      }
+
+      /* ============ TITLE ============ */
+      h1.title {
+        font-family: "Poppins", sans-serif;
+        font-weight: 800;
+        font-size: clamp(64px, 10vw, 148px);
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+        margin: 0 0 28px;
+        color: var(--ink);
+        text-wrap: balance;
+      }
+      h1.title .city-line {
+        display: block;
+        overflow: hidden;
+        padding-bottom: 6px;
+      }
+      h1.title .city-name {
+        display: inline-block;
+        color: var(--ink);
+      }
+
+      .country {
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: clamp(13px, 1vw, 15px);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        margin: 0 0 32px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .country::before {
+        content: "";
+        width: 36px;
+        height: 1.5px;
+        background: var(--ink-soft);
+        display: inline-block;
+      }
+
+      .desc {
+        font-size: 17px;
+        line-height: 1.6;
+        color: var(--ink-soft);
+        max-width: 480px;
+        margin: 0 0 44px;
+        text-wrap: pretty;
+      }
+
+      .cta-row {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 15px;
+        font-weight: 600;
+        padding: 20px 34px;
+        border-radius: 999px;
+        background: var(--ink);
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        transition:
+          transform 0.25s ease,
+          background 0.25s ease,
+          box-shadow 0.25s ease;
+        box-shadow: 0 12px 30px -10px rgba(10, 19, 48, 0.45);
+      }
+      .btn:hover {
+        background: var(--accent);
+        transform: translateY(-2px);
+        box-shadow: 0 16px 40px -12px rgba(199, 85, 30, 0.5);
+      }
+      .btn svg {
+        transition: transform 0.25s ease;
+      }
+      .btn:hover svg {
+        transform: translateX(4px);
+      }
+
+      .stat {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.15;
+        padding-left: 24px;
+        border-left: 1.5px solid rgba(10, 19, 48, 0.2);
+      }
+      .stat b {
+        font-family: "Poppins", sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--ink);
+        letter-spacing: -0.02em;
+      }
+      .stat span {
+        font-size: 11px;
+        color: var(--ink-soft);
+        margin-top: 4px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      /* ============ RIGHT: image stack ============ */
+      .right {
+        position: relative;
+        height: 580px;
+        z-index: 2;
+      }
+
+      .stack {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .card {
+        position: absolute;
+        width: 200px;
+        height: 460px;
+        border-radius: 999px 999px 0 0; /* arch — fully rounded top, flat bottom */
+        overflow: hidden;
+        box-shadow:
+          0 30px 60px -25px rgba(31, 26, 20, 0.38),
+          0 6px 14px rgba(31, 26, 20, 0.08);
+        transition:
+          transform 0.55s cubic-bezier(0.6, 0.05, 0.2, 1),
+          opacity 0.5s ease,
+          box-shadow 0.4s ease,
+          filter 0.4s ease;
+        cursor: pointer;
+        background: #e8dccb;
+        border: 6px solid #fff;
+      }
+      .card .img {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        transition: transform 0.9s cubic-bezier(0.6, 0.05, 0.2, 1);
+      }
+
+      /* HOVER: bring hovered card to the front and lift it; dim the others */
+      .stack:hover .card {
+        filter: brightness(0.92) saturate(0.9);
+        transform-origin: center bottom;
+      }
+      .stack .card:hover {
+        z-index: 20 !important;
+        filter: brightness(1) saturate(1);
+        box-shadow:
+          0 40px 70px -20px rgba(31, 26, 20, 0.5),
+          0 10px 20px rgba(31, 26, 20, 0.12);
+      }
+      /* Each card has a base transform from .c0/.c1/.c2 — hover layers an additional lift */
+      .stack .card.c0:hover {
+        transform: translate(-180px, 14px) scale(1.12) translateY(-12px);
+      }
+      .stack .card.c1:hover {
+        transform: translate(0, -10px) scale(1.18) translateY(-12px);
+      }
+      .stack .card.c2:hover {
+        transform: translate(180px, 18px) scale(1.12) translateY(-12px);
+      }
+      .card:hover .img {
+        transform: scale(1.08);
+      }
+      .card .label {
+        position: absolute;
+        left: 50%;
+        bottom: 24px;
+        transform: translateX(-50%) translateY(8px);
+        opacity: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(8px);
+        color: var(--ink);
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        padding: 9px 14px;
+        border-radius: 999px;
+        white-space: nowrap;
+        transition:
+          opacity 0.35s ease,
+          transform 0.35s ease;
+      }
+      .card:hover .label {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      /* THREE arches, staggered heights + offsets (NO rotation — cleaner) */
+      .card.c0 {
+        transform: translate(-180px, 14px);
+        z-index: 1;
+        height: 420px;
+      }
+      .card.c1 {
+        transform: translate(0, -10px) scale(1.06);
+        z-index: 3;
+        height: 480px;
+      }
+      .card.c2 {
+        transform: translate(180px, 18px);
+        z-index: 2;
+        height: 410px;
+      }
+
+      /* big translucent numeral behind the stack */
+      .right::before {
+        content: attr(data-num);
+        position: absolute;
+        right: -10px;
+        top: -30px;
+        font-family: "Poppins", sans-serif;
+        font-weight: 800;
+        font-size: 280px;
+        line-height: 1;
+        letter-spacing: -0.05em;
+        color: rgba(31, 26, 20, 0.06);
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      /* Arrows */
+      .arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        background: #fff;
+        border: 1px solid rgba(31, 26, 20, 0.1);
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        z-index: 10;
+        box-shadow: 0 10px 24px -10px rgba(31, 26, 20, 0.28);
+        transition:
+          background 0.2s ease,
+          transform 0.2s ease,
+          color 0.2s ease;
+        color: var(--ink);
+      }
+      .arrow:hover {
+        background: var(--ink);
+        color: #fff;
+        transform: translateY(-50%) scale(1.06);
+      }
+      .arrow.left {
+        left: 28px;
+      }
+      .arrow.right {
+        right: 28px;
+      }
+
+      /* dots */
+      .dots {
+        position: absolute;
+        bottom: 36px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 5;
+      }
+      .dots i {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: rgba(31, 26, 20, 0.22);
+        transition:
+          width 0.3s ease,
+          background 0.3s ease;
+        cursor: pointer;
+      }
+      .dots i.on {
+        width: 30px;
+        border-radius: 999px;
+        background: var(--ink);
+      }
+
+      /* counter */
+      .counter {
+        position: absolute;
+        top: 40px;
+        right: 40px;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        color: var(--ink-soft);
+        letter-spacing: 0.08em;
+        z-index: 5;
+        font-weight: 500;
+      }
+      .counter b {
+        color: var(--ink);
+        font-weight: 800;
+        font-size: 24px;
+        margin-right: 6px;
+        letter-spacing: -0.02em;
+      }
+
+      /* ============ RESPONSIVE ============ */
+      @media (max-width: 1100px) {
+        .hero {
+          padding: 64px 56px;
+          grid-template-columns: 1fr 0.9fr;
+          gap: 32px;
+          min-height: 640px;
+        }
+        .right {
+          height: 520px;
+        }
+        .card.c0 {
+          transform: translate(-140px, 14px);
+          height: 380px;
+        }
+        .card.c1 {
+          transform: translate(0, -10px) scale(1.06);
+          height: 440px;
+        }
+        .card.c2 {
+          transform: translate(140px, 18px);
+          height: 370px;
+        }
+        .card {
+          width: 170px;
+          border-width: 5px;
+        }
+        .right::before {
+          font-size: 240px;
+        }
+        .arrow.left {
+          left: 16px;
+        }
+        .arrow.right {
+          right: 16px;
+        }
+      }
+
+      /* ============ TABLET RESPONSIVENESS ============ */
+      @media (max-width: 1000px) and (min-width: 761px) {
+        /* Hide arrows on tablet */
+        .arrow.abs {
+          display: none !important;
+        }
+
+        /* Book CTA - full width image */
+        .book-cta-inner {
+          grid-template-columns: 1fr !important;
+        }
+        .book-cta-right {
+          width: 100%;
+          max-width: 100% !important;
+        }
+
+        /* Center align footer */
+        .footer-top {
+          grid-template-columns: 1fr !important;
+          text-align: center;
+          gap: 40px;
+        }
+        .footer-brand {
+          text-align: center;
+        }
+        .footer-brand .brand {
+          justify-content: center;
+        }
+        .footer-brand p {
+          text-align: center !important;
+          margin: 0 auto 28px !important;
+          max-width: 100% !important;
+        }
+        .footer-brand .contact-row {
+          justify-content: center;
+          flex-direction: column;
+          align-items: center;
+        }
+        .newsletter {
+          text-align: center;
+        }
+        .newsletter p {
+          text-align: center !important;
+          margin: 0 auto 20px !important;
+          max-width: 100% !important;
+        }
+        .newsletter form {
+          margin: 0 auto;
+          max-width: 100%;
+        }
+        .newsletter-socials {
+          justify-content: center;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .footer-cols {
+          grid-template-columns: repeat(2, 1fr);
+          text-align: center;
+        }
+        .footer-col ul a {
+          justify-content: center;
+        }
+        .footer-bottom {
+          flex-direction: column;
+          text-align: center;
+        }
+      }
+
+      /* ===== MOBILE ===== */
+      @media (max-width: 760px) {
+        body {
+          padding: 0;
+        }
+        .hero {
+          grid-template-columns: 1fr;
+          padding: 56px 24px 40px;
+          gap: 28px;
+          min-height: 0;
+          border-radius: 28px;
+        }
+        .hero::before {
+          mask-image: none;
+          -webkit-mask-image: none;
+          opacity: 0.5;
+        }
+
+        .eyebrow {
+          font-size: 10px;
+          padding: 8px 12px;
+          margin-bottom: 18px;
+        }
+
+        h1.title {
+          font-size: clamp(56px, 18vw, 84px);
+          margin-bottom: 14px;
+        }
+        .country {
+          font-size: 11px;
+          margin-bottom: 18px;
+        }
+        .country::before {
+          width: 24px;
+        }
+        .desc {
+          font-size: 15px;
+          margin-bottom: 28px;
+        }
+
+        .cta-row {
+          gap: 18px;
+        }
+        .btn {
+          padding: 16px 26px;
+          font-size: 14px;
+        }
+        .stat b {
+          font-size: 22px;
+        }
+
+        /* image stack — smaller arches, tighter overlap */
+        .right {
+          height: 360px;
+          order: -1; /* image above text on mobile */
+        }
+        .right::before {
+          display: none;
+        }
+        .card {
+          width: 110px;
+          border-width: 4px;
+        }
+        .card.c0 {
+          transform: translate(-95px, 10px);
+          height: 270px;
+        }
+        .card.c1 {
+          transform: translate(0, -8px) scale(1.05);
+          height: 310px;
+        }
+        .card.c2 {
+          transform: translate(95px, 12px);
+          height: 260px;
+        }
+        .card .label {
+          font-size: 8.5px;
+          padding: 6px 10px;
+          bottom: 14px;
+          letter-spacing: 0.12em;
+        }
+
+        /* On mobile order is: image-stack, then text. Put arrows under the stack as a row */
+        .arrow {
+          position: relative;
+          top: auto;
+          transform: none;
+          left: auto !important;
+          right: auto !important;
+          width: 44px;
+          height: 44px;
+        }
+        .arrow:hover {
+          transform: scale(1.06);
+        }
+        .arrow-row {
+          display: flex;
+          gap: 12px;
+          justify-content: center;
+          margin-top: 18px;
+          order: 0;
+        }
+        /* Hide the absolute arrows on mobile, show the row */
+        .arrow.abs {
+          display: none;
+        }
+        .arrow-row {
+          display: flex;
+        }
+
+        .dots {
+          bottom: auto;
+          position: relative;
+          left: auto;
+          transform: none;
+          margin: 0 auto;
+          justify-content: center;
+        }
+        .counter {
+          top: 20px;
+          right: 24px;
+          font-size: 12px;
+        }
+        .counter b {
+          font-size: 20px;
+        }
+      }
+      /* On desktop, hide the inline arrow-row */
+      @media (min-width: 761px) {
+        .arrow-row {
+          display: none;
+        }
+      }
+
+      /* ============ FEATURED DESTINATIONS ============ */
+      .destinations {
+        width: 100%;
+        background: var(--bg);
+        padding: 120px 56px 140px;
+        position: relative;
+      }
+      .destinations::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 1px;
+        background: rgba(31, 26, 20, 0.08);
+      }
+      .dest-head {
+        max-width: 1320px;
+        margin: 0 auto 64px;
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 48px;
+        align-items: end;
+      }
+      .dest-head .eyebrow {
+        margin: 0 0 24px;
+        width: max-content;
+      }
+      .dest-head h2 {
+        font-family: "Poppins", sans-serif;
+        font-weight: 500;
+        font-size: clamp(40px, 5vw, 72px);
+        line-height: 1;
+        letter-spacing: -0.035em;
+        margin: 0;
+        color: var(--ink);
+        text-wrap: balance;
+      }
+      .dest-head h2 em {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        color: var(--accent);
+      }
+      .dest-head .sub {
+        font-size: 16px;
+        line-height: 1.6;
+        color: var(--ink-soft);
+        margin: 0 0 8px;
+        max-width: 440px;
+      }
+      .dest-head .view-all {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 14px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ink);
+        text-decoration: none;
+        padding: 12px 6px 12px 0;
+        border-bottom: 1.5px solid var(--ink);
+        transition:
+          color 0.2s ease,
+          border-color 0.2s ease,
+          gap 0.2s ease;
+      }
+      .dest-head .view-all:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        gap: 16px;
+      }
+      .dest-head .view-all .arrow-wrap {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: #fff;
+        display: inline-grid;
+        place-items: center;
+        transition:
+          background 0.2s ease,
+          transform 0.2s ease;
+      }
+      .dest-head .view-all:hover .arrow-wrap {
+        background: var(--accent);
+        transform: rotate(-45deg);
+      }
+
+      .dest-grid {
+        max-width: 1320px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+      }
+      .dest-card {
+        position: relative;
+        background: #fff;
+        border-radius: 22px;
+        overflow: hidden;
+        cursor: pointer;
+        transition:
+          transform 0.35s cubic-bezier(0.6, 0.05, 0.2, 1),
+          box-shadow 0.35s ease,
+          border-color 0.35s ease;
+        box-shadow: 0 4px 12px -6px rgba(31, 26, 20, 0.08);
+        border: 1px solid rgba(31, 26, 20, 0.05);
+        text-decoration: none;
+        color: inherit;
+        display: block;
+      }
+      .dest-card:hover {
+        transform: translateY(-6px);
+        box-shadow:
+          0 30px 60px -25px rgba(31, 26, 20, 0.32),
+          0 6px 14px rgba(31, 26, 20, 0.06);
+      }
+      .dest-card .photo {
+        position: relative;
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        background: #e8dccb;
+      }
+      .dest-card .photo .img {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        transition: transform 1s cubic-bezier(0.6, 0.05, 0.2, 1);
+      }
+      .dest-card:hover .photo .img {
+        transform: scale(1.08);
+      }
+
+      .dest-card .tag {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        background: rgba(255, 255, 255, 0.95);
+        color: var(--ink);
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 10.5px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-weight: 600;
+        backdrop-filter: blur(6px);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .dest-card .tag::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+
+      .dest-card .info {
+        padding: 20px 22px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+      }
+      .dest-card .info-text {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 0;
+        flex: 1 1 auto;
+      }
+      .dest-card .info-text b {
+        font-family: "Poppins", sans-serif;
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        line-height: 1.1;
+      }
+      .dest-card .info-text span.tagline {
+        font-size: 13px;
+        color: var(--ink-soft);
+        font-weight: 500;
+      }
+      .dest-card .duration {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 8px;
+        font-size: 11.5px;
+        font-weight: 600;
+        color: var(--accent);
+        letter-spacing: 0.04em;
+        background: rgba(199, 85, 30, 0.08);
+        padding: 5px 10px 5px 8px;
+        border-radius: 999px;
+        width: max-content;
+      }
+      .dest-card .duration svg {
+        flex-shrink: 0;
+      }
+      .dest-card .go {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #f5efe5;
+        color: var(--ink);
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        transition:
+          background 0.25s ease,
+          color 0.25s ease,
+          transform 0.25s ease;
+      }
+      .dest-card:hover .go {
+        background: var(--accent);
+        color: #fff;
+        transform: rotate(-45deg);
+      }
+
+      @media (max-width: 1100px) {
+        .destinations {
+          padding: 96px 40px 110px;
+        }
+        .dest-head {
+          grid-template-columns: 1fr;
+          gap: 20px;
+          align-items: start;
+        }
+        .dest-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 20px;
+        }
+      }
+      @media (max-width: 600px) {
+        .destinations {
+          padding: 72px 20px 90px;
+        }
+        .dest-head {
+          margin-bottom: 40px;
+        }
+        .dest-grid {
+          grid-template-columns: 1fr;
+          gap: 18px;
+        }
+        .dest-card .info {
+          padding: 18px;
+        }
+        .dest-card .info-text b {
+          font-size: 19px;
+        }
+        .dest-card .go {
+          width: 38px;
+          height: 38px;
+        }
+      }
+
+      /* ============ CTA BANNER (solid, no image) ============ */
+      .cta-banner {
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        padding: 120px 56px;
+        background: linear-gradient(135deg, var(--accent) 0%, #b8461a 100%);
+        color: #fff;
+        isolation: isolate;
+      }
+      /* decorative type watermark, not an image */
+      .cta-banner::before {
+        content: "adventure";
+        position: absolute;
+        right: -40px;
+        bottom: -60px;
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        font-size: clamp(180px, 22vw, 360px);
+        line-height: 0.85;
+        color: rgba(255, 255, 255, 0.08);
+        letter-spacing: -0.04em;
+        pointer-events: none;
+        z-index: 0;
+        white-space: nowrap;
+      }
+      /* subtle dot pattern */
+      .cta-banner::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(
+          rgba(255, 255, 255, 0.08) 1px,
+          transparent 1.4px
+        );
+        background-size: 28px 28px;
+        mask-image: radial-gradient(
+          ellipse at 20% 50%,
+          transparent 30%,
+          #000 85%
+        );
+        -webkit-mask-image: radial-gradient(
+          ellipse at 20% 50%,
+          transparent 30%,
+          #000 85%
+        );
+        pointer-events: none;
+        z-index: 0;
+      }
+      .cta-banner-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        width: 100%;
+        position: relative;
+        z-index: 2;
+        text-align: center;
+      }
+      .cta-banner .eyebrow {
+        margin: 0 auto 28px;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.14);
+        border-color: rgba(255, 255, 255, 0.22);
+        width: max-content;
+      }
+      .cta-banner .eyebrow .dot {
+        background: #fff;
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.25);
+      }
+
+      .cta-banner h2 {
+        font-family: "Poppins", sans-serif;
+        font-weight: 500;
+        font-size: clamp(46px, 6.5vw, 88px);
+        line-height: 1;
+        letter-spacing: -0.04em;
+        margin: 0 0 24px;
+        color: #fff;
+        text-wrap: balance;
+      }
+      .cta-banner h2 em {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        color: #fff2e2;
+      }
+      .cta-banner p {
+        font-size: 17px;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.85);
+        margin: 0 auto 36px;
+        max-width: 560px;
+        text-wrap: pretty;
+      }
+      .cta-banner .btn-row {
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .cta-banner .btn-primary {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 20px 28px 20px 32px;
+        border-radius: 999px;
+        background: var(--ink);
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        transition:
+          background 0.25s ease,
+          transform 0.25s ease,
+          box-shadow 0.25s ease;
+        box-shadow: 0 14px 30px -10px rgba(31, 26, 20, 0.45);
+      }
+      .cta-banner .btn-primary:hover {
+        background: #fff;
+        color: var(--ink);
+        transform: translateY(-2px);
+      }
+      .cta-banner .btn-primary .arrow-wrap {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.18);
+        display: inline-grid;
+        place-items: center;
+        transition:
+          background 0.25s ease,
+          transform 0.25s ease,
+          color 0.25s ease;
+      }
+      .cta-banner .btn-primary:hover .arrow-wrap {
+        background: var(--accent);
+        color: #fff;
+        transform: rotate(-45deg);
+      }
+
+      .cta-banner .btn-ghost {
+        appearance: none;
+        cursor: pointer;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 19px 28px;
+        border-radius: 999px;
+        background: transparent;
+        color: #fff;
+        border: 1.5px solid rgba(255, 255, 255, 0.55);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition:
+          background 0.25s ease,
+          border-color 0.25s ease;
+        text-decoration: none;
+      }
+      .cta-banner .btn-ghost:hover {
+        background: rgba(255, 255, 255, 0.14);
+        border-color: #fff;
+      }
+
+      @media (max-width: 1100px) {
+        .cta-banner {
+          padding: 96px 40px;
+        }
+      }
+      @media (max-width: 600px) {
+        .cta-banner {
+          padding: 72px 20px;
+        }
+        .cta-banner h2 {
+          font-size: clamp(38px, 11vw, 56px);
+        }
+        .cta-banner p {
+          font-size: 15px;
+          margin-bottom: 28px;
+        }
+        .cta-banner .btn-primary {
+          padding: 16px 22px 16px 26px;
+          font-size: 13px;
+        }
+        .cta-banner .btn-ghost {
+          padding: 15px 22px;
+          font-size: 13px;
+        }
+        .cta-banner .btn-row {
+          gap: 12px;
+        }
+      }
+
+      /* ============ SERVICES ============ */
+      .services {
+        width: 100%;
+        background: linear-gradient(135deg, #ffffff 0%, #faf9f7 100%);
+        padding: 120px 56px 140px;
+        position: relative;
+      }
+      .services::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(
+          rgba(31, 26, 20, 0.06) 1px,
+          transparent 1px
+        );
+        background-size: 26px 26px;
+        mask-image: radial-gradient(
+          ellipse at 50% 30%,
+          transparent 25%,
+          #000 80%
+        );
+        -webkit-mask-image: radial-gradient(
+          ellipse at 50% 30%,
+          transparent 25%,
+          #000 80%
+        );
+        pointer-events: none;
+      }
+      .svc-head {
+        max-width: 1320px;
+        margin: 0 auto 64px;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+      .svc-head .eyebrow {
+        margin: 0 auto 24px;
+      }
+      .svc-head h2 {
+        font-family: "Poppins", sans-serif;
+        font-weight: 500;
+        font-size: clamp(40px, 5vw, 72px);
+        line-height: 1;
+        letter-spacing: -0.035em;
+        margin: 0 0 20px;
+        color: var(--ink);
+        text-wrap: balance;
+      }
+      .svc-head h2 em {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        color: var(--accent);
+      }
+      .svc-head .sub {
+        font-size: 16px;
+        line-height: 1.6;
+        color: var(--ink-soft);
+        margin: 0 auto;
+        max-width: 540px;
+      }
+
+      .svc-grid {
+        max-width: 1320px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        position: relative;
+        z-index: 2;
+      }
+      .svc-card {
+        background: #fff;
+        border: 1px solid rgba(31, 26, 20, 0.07);
+        border-radius: 22px;
+        padding: 36px 32px 32px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        transition:
+          transform 0.35s cubic-bezier(0.6, 0.05, 0.2, 1),
+          box-shadow 0.35s ease,
+          border-color 0.35s ease;
+        text-decoration: none;
+        color: inherit;
+        position: relative;
+      }
+      .svc-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(199, 85, 30, 0.4);
+        box-shadow: 0 24px 50px -25px rgba(31, 26, 20, 0.25);
+      }
+
+      .svc-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 18px;
+        background: rgba(199, 85, 30, 0.1);
+        color: var(--accent);
+        display: grid;
+        place-items: center;
+        transition:
+          background 0.3s ease,
+          color 0.3s ease,
+          transform 0.3s ease;
+      }
+      .svc-card:hover .svc-icon {
+        background: var(--accent);
+        color: #fff;
+        transform: scale(1.06) rotate(-3deg);
+      }
+
+      .svc-card h3 {
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-size: 21px;
+        letter-spacing: -0.02em;
+        margin: 0;
+        color: var(--ink);
+      }
+      .svc-card p {
+        font-size: 14.5px;
+        line-height: 1.6;
+        color: var(--ink-soft);
+        margin: 0;
+      }
+      .svc-card .more {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: auto;
+        padding-top: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ink);
+        transition:
+          gap 0.25s ease,
+          color 0.25s ease;
+      }
+      .svc-card:hover .more {
+        gap: 12px;
+        color: var(--accent);
+      }
+
+      /* small numeric counter top-right */
+      .svc-card::after {
+        content: attr(data-num);
+        position: absolute;
+        top: 24px;
+        right: 28px;
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 20px;
+        color: var(--ink-soft);
+        opacity: 0.5;
+      }
+
+      @media (max-width: 1100px) {
+        .services {
+          padding: 96px 40px 110px;
+        }
+        .svc-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 18px;
+        }
+      }
+      @media (max-width: 600px) {
+        .services {
+          padding: 72px 20px 90px;
+        }
+        .svc-head {
+          margin-bottom: 40px;
+        }
+        .svc-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .svc-card {
+          padding: 28px 24px 24px;
+          gap: 14px;
+        }
+        .svc-card h3 {
+          font-size: 19px;
+        }
+        .svc-icon {
+          width: 52px;
+          height: 52px;
+          border-radius: 14px;
+        }
+      }
+
+      /* ============ ICONIC ATTRACTIONS (feature row) ============ */
+      .iconic {
+        width: 100%;
+        background: linear-gradient(135deg, #ffffff 0%, #faf9f7 100%);
+        padding: 110px 56px 120px;
+        position: relative;
+      }
+      .iconic::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(
+          rgba(31, 26, 20, 0.06) 1px,
+          transparent 1.4px
+        );
+        background-size: 28px 28px;
+        mask-image: radial-gradient(
+          ellipse at 50% 30%,
+          transparent 35%,
+          #000 85%
+        );
+        -webkit-mask-image: radial-gradient(
+          ellipse at 50% 30%,
+          transparent 35%,
+          #000 85%
+        );
+        pointer-events: none;
+      }
+      .iconic-inner {
+        max-width: 1320px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+      }
+      .iconic-head {
+        text-align: center;
+        margin-bottom: 72px;
+      }
+      .iconic-head .eyebrow {
+        margin: 0 auto 24px;
+      }
+      .iconic-head h2 {
+        font-family: "Poppins", sans-serif;
+        font-weight: 500;
+        font-size: clamp(40px, 5vw, 72px);
+        line-height: 1.05;
+        letter-spacing: -0.035em;
+        margin: 0;
+        color: var(--ink);
+        text-wrap: balance;
+      }
+      .iconic-head h2 em {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        color: var(--accent);
+      }
+
+      .iconic-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0;
+        align-items: start;
+      }
+      .iconic-feat {
+        padding: 8px 36px;
+        position: relative;
+        text-align: left;
+      }
+      /* subtle vertical dividers between columns */
+      .iconic-feat + .iconic-feat::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 16px;
+        bottom: 16px;
+        width: 1px;
+        background: rgba(31, 26, 20, 0.14);
+      }
+      .iconic-feat .feat-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 20px;
+        background: var(--bg);
+        color: var(--accent);
+        display: grid;
+        place-items: center;
+        margin-bottom: 28px;
+        box-shadow: 0 12px 28px -14px rgba(31, 26, 20, 0.15);
+        transition:
+          background 0.3s ease,
+          color 0.3s ease,
+          transform 0.3s ease;
+      }
+      .iconic-feat:hover .feat-icon {
+        background: var(--accent);
+        color: #fff;
+        transform: scale(1.06) rotate(-3deg);
+      }
+      .iconic-feat h3 {
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-size: 24px;
+        letter-spacing: -0.02em;
+        margin: 0 0 10px;
+        color: var(--ink);
+      }
+      .iconic-feat p {
+        font-size: 15px;
+        line-height: 1.6;
+        color: var(--ink-soft);
+        margin: 0;
+        max-width: 320px;
+        text-wrap: pretty;
+      }
+      .iconic-feat .num {
+        position: absolute;
+        top: -4px;
+        right: 36px;
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 18px;
+        color: var(--ink-soft);
+        opacity: 0.5;
+      }
+
+      @media (max-width: 1100px) {
+        .iconic {
+          padding: 88px 40px 100px;
+        }
+        .iconic-head {
+          margin-bottom: 56px;
+        }
+        .iconic-grid {
+          grid-template-columns: 1fr;
+          gap: 32px;
+        }
+        .iconic-feat {
+          padding: 0;
+        }
+        .iconic-feat + .iconic-feat::before {
+          left: 0;
+          right: 0;
+          top: -16px;
+          bottom: auto;
+          width: 100%;
+          height: 1px;
+        }
+        .iconic-feat .num {
+          right: 0;
+          top: 0;
+        }
+      }
+
+      /* TABLET: Iconic Section - Center Aligned */
+      @media (max-width: 1000px) and (min-width: 761px) {
+        .iconic-feat {
+          text-align: center;
+        }
+        .iconic-feat .feat-icon {
+          margin: 0 auto 28px;
+        }
+        .iconic-feat p {
+          margin: 0 auto;
+          text-align: center;
+          max-width: 320px;
+        }
+        .iconic-feat + .iconic-feat::before {
+          left: 50% !important;
+          transform: translateX(-50%);
+          width: 320px !important;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .iconic {
+          padding: 72px 24px 80px;
+        }
+        .iconic-head {
+          margin-bottom: 44px;
+        }
+        .iconic-feat .feat-icon {
+          width: 54px;
+          height: 54px;
+          border-radius: 16px;
+          margin-bottom: 20px;
+        }
+        .iconic-feat h3 {
+          font-size: 21px;
+        }
+      }
+
+      /* ============ COUNTRIES WE COVER ============ */
+      .countries {
+        width: 100%;
+        background: linear-gradient(135deg, var(--bg) 0%, #f9f5ef 100%);
+        padding: 110px 56px 130px;
+        position: relative;
+      }
+      .countries::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(
+          rgba(31, 26, 20, 0.05) 1px,
+          transparent 1.4px
+        );
+        background-size: 28px 28px;
+        mask-image: radial-gradient(
+          ellipse at 50% 30%,
+          transparent 30%,
+          #000 85%
+        );
+        -webkit-mask-image: radial-gradient(
+          ellipse at 50% 30%,
+          transparent 30%,
+          #000 85%
+        );
+        pointer-events: none;
+      }
+      .countries-inner {
+        max-width: 1320px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+      }
+      .countries-head {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 48px;
+        align-items: end;
+        margin-bottom: 56px;
+      }
+      .countries-head .eyebrow {
+        margin: 0 0 24px;
+        width: max-content;
+      }
+      .countries-head h2 {
+        font-family: "Poppins", sans-serif;
+        font-weight: 500;
+        font-size: clamp(40px, 5vw, 72px);
+        line-height: 1.05;
+        letter-spacing: -0.035em;
+        margin: 0;
+        color: var(--ink);
+        text-wrap: balance;
+      }
+      .countries-head h2 em {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        color: var(--accent);
+      }
+      .countries-head .sub {
+        font-size: 16px;
+        line-height: 1.6;
+        color: var(--ink-soft);
+        margin: 0;
+        max-width: 460px;
+      }
+
+      .country-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+      }
+      .country-card {
+        position: relative;
+        display: block;
+        aspect-ratio: 4 / 5;
+        border-radius: 22px;
+        overflow: hidden;
+        text-decoration: none;
+        color: #fff;
+        box-shadow: 0 6px 18px -8px rgba(31, 26, 20, 0.18);
+        transition:
+          transform 0.4s cubic-bezier(0.6, 0.05, 0.2, 1),
+          box-shadow 0.4s ease;
+      }
+      .country-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 30px 60px -25px rgba(31, 26, 20, 0.4);
+      }
+      .country-card .country-img {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        transition: transform 1s cubic-bezier(0.6, 0.05, 0.2, 1);
+      }
+      .country-card:hover .country-img {
+        transform: scale(1.08);
+      }
+      .country-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0) 30%,
+          rgba(15, 12, 8, 0.78) 100%
+        );
+      }
+
+      .country-card .country-info {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 18px;
+        z-index: 2;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .country-card .country-info-text {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 0;
+      }
+      .country-card .country-info-text b {
+        font-family: "Poppins", sans-serif;
+        font-size: 19px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: #fff;
+        line-height: 1.1;
+      }
+      .country-card .country-info-text span {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.82);
+        font-weight: 500;
+        letter-spacing: 0.02em;
+      }
+      .country-card .arrow {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.95);
+        color: var(--ink);
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        transition:
+          background 0.3s ease,
+          color 0.3s ease,
+          transform 0.3s ease;
+      }
+      .country-card:hover .arrow {
+        background: var(--accent);
+        color: #fff;
+        transform: rotate(-45deg);
+      }
+
+      /* small tag chip at top-left of card (Hills / Beach / Heritage) */
+      .country-card .ctag {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        z-index: 2;
+        background: rgba(255, 255, 255, 0.92);
+        color: var(--ink);
+        padding: 5px 11px;
+        border-radius: 999px;
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-weight: 600;
+        backdrop-filter: blur(6px);
+      }
+
+      .countries-foot {
+        margin-top: 52px;
+        text-align: center;
+      }
+      .countries-foot a {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ink);
+        text-decoration: none;
+        padding: 14px 24px;
+        border: 1.5px solid rgba(31, 26, 20, 0.16);
+        border-radius: 999px;
+        transition:
+          background 0.25s ease,
+          color 0.25s ease,
+          border-color 0.25s ease;
+      }
+      .countries-foot a:hover {
+        background: var(--ink);
+        color: #fff;
+        border-color: var(--ink);
+      }
+
+      @media (max-width: 1100px) {
+        .countries {
+          padding: 88px 40px 100px;
+        }
+        .countries-head {
+          grid-template-columns: 1fr;
+          gap: 20px;
+          align-items: start;
+          margin-bottom: 44px;
+        }
+        .country-grid {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 14px;
+        }
+      }
+      @media (max-width: 760px) {
+        .country-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .country-card .country-info-text b {
+          font-size: 17px;
+        }
+      }
+      @media (max-width: 480px) {
+        .countries {
+          padding: 72px 20px 90px;
+        }
+        .country-grid {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        .country-card {
+          aspect-ratio: 5 / 3;
+        }
+      }
+
+      /* ============ BOOK CTA (split layout) ============ */
+      .book-cta {
+        width: 100%;
+        background: linear-gradient(135deg, #ffffff 0%, #faf9f7 100%);
+        padding: 120px 56px 140px;
+        position: relative;
+      }
+      .book-cta-inner {
+        max-width: 1320px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1.05fr 1fr;
+        gap: 80px;
+        align-items: center;
+      }
+      .book-cta-left {
+        position: relative;
+        z-index: 2;
+      }
+      .book-cta-left .eyebrow {
+        margin: 0 0 28px;
+        width: max-content;
+      }
+      .book-cta-left h2 {
+        font-family: "Poppins", sans-serif;
+        font-weight: 500;
+        font-size: clamp(46px, 6.2vw, 92px);
+        line-height: 1;
+        letter-spacing: -0.04em;
+        margin: 0 0 24px;
+        color: var(--ink);
+        text-wrap: balance;
+      }
+      .book-cta-left h2 em {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        color: var(--accent);
+      }
+      .book-cta-left p {
+        font-size: 17px;
+        line-height: 1.6;
+        color: var(--ink-soft);
+        margin: 0 0 40px;
+        max-width: 500px;
+        text-wrap: pretty;
+      }
+      .book-cta-left .feature-row {
+        display: flex;
+        gap: 32px;
+        margin: 0 0 40px;
+        flex-wrap: wrap;
+      }
+      .book-cta-left .feature-row li {
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        color: var(--ink);
+        font-weight: 500;
+      }
+      .book-cta-left .feature-row li::before {
+        content: "";
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: rgba(199, 85, 30, 0.12);
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C7551E' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12l5 5L20 7'/></svg>");
+        background-repeat: no-repeat;
+        background-size: 11px 11px;
+        background-position: center;
+        flex-shrink: 0;
+      }
+      .book-cta-left .btn-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .book-cta-left .btn-primary {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 20px 28px 20px 32px;
+        border-radius: 999px;
+        background: var(--ink);
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        transition:
+          background 0.25s ease,
+          transform 0.25s ease,
+          box-shadow 0.25s ease;
+        box-shadow: 0 14px 30px -10px rgba(31, 26, 20, 0.45);
+      }
+      .book-cta-left .btn-primary:hover {
+        background: var(--accent);
+        transform: translateY(-2px);
+      }
+      .book-cta-left .btn-primary .arrow-wrap {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--accent);
+        display: inline-grid;
+        place-items: center;
+        transition:
+          background 0.25s ease,
+          transform 0.25s ease,
+          color 0.25s ease;
+      }
+      .book-cta-left .btn-primary:hover .arrow-wrap {
+        background: #fff;
+        color: var(--accent);
+        transform: rotate(-45deg);
+      }
+
+      .book-cta-left .btn-ghost {
+        appearance: none;
+        cursor: pointer;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 19px 28px;
+        border-radius: 999px;
+        background: transparent;
+        color: var(--ink);
+        border: 1.5px solid rgba(31, 26, 20, 0.18);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition:
+          background 0.25s ease,
+          border-color 0.25s ease;
+        text-decoration: none;
+      }
+      .book-cta-left .btn-ghost:hover {
+        background: var(--bg);
+        border-color: var(--ink);
+      }
+
+      /* RIGHT: tourist image with decoration */
+      .book-cta-right {
+        position: relative;
+        aspect-ratio: 5 / 6;
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow:
+          0 36px 70px -30px rgba(31, 26, 20, 0.4),
+          0 8px 20px rgba(31, 26, 20, 0.08);
+      }
+      .book-cta-right .img {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        transition: transform 1.2s cubic-bezier(0.6, 0.05, 0.2, 1);
+      }
+      .book-cta-right:hover .img {
+        transform: scale(1.04);
+      }
+      .book-cta-right::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0) 60%,
+          rgba(15, 12, 8, 0.55) 100%
+        );
+      }
+      /* floating badge on image */
+      .book-badge {
+        position: absolute;
+        bottom: 24px;
+        left: 24px;
+        z-index: 3;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 14px 18px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        box-shadow: 0 14px 30px -12px rgba(31, 26, 20, 0.35);
+      }
+      .book-badge .avatars {
+        display: flex;
+      }
+      .book-badge .avatars span {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 2px solid #fff;
+        background-size: cover;
+        background-position: center;
+        margin-left: -10px;
+      }
+      .book-badge .avatars span:first-child {
+        margin-left: 0;
+      }
+      .book-badge .badge-text {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+      }
+      .book-badge .badge-text b {
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .book-badge .badge-text span {
+        font-size: 11.5px;
+        color: var(--ink-soft);
+        font-weight: 500;
+      }
+      /* corner decoration */
+      .book-cta-right .corner-tag {
+        position: absolute;
+        top: 24px;
+        right: 24px;
+        z-index: 3;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-size: 11px;
+        line-height: 1.1;
+        text-align: center;
+        box-shadow: 0 12px 28px -10px rgba(199, 85, 30, 0.6);
+        animation: spinSlow 18s linear infinite;
+      }
+      @keyframes spinSlow {
+        from {
+          transform: rotate(0);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 1100px) {
+        .book-cta {
+          padding: 96px 40px 110px;
+        }
+        .book-cta-inner {
+          grid-template-columns: 1fr;
+          gap: 48px;
+        }
+        .book-cta-right {
+          aspect-ratio: 5 / 4;
+          max-width: 560px;
+        }
+      }
+      @media (max-width: 600px) {
+        .book-cta {
+          padding: 72px 20px 90px;
+        }
+        .book-cta-inner {
+          gap: 36px;
+        }
+        .book-cta-left h2 {
+          font-size: clamp(38px, 11vw, 56px);
+        }
+        .book-cta-left p {
+          font-size: 15px;
+        }
+        .book-cta-left .btn-primary {
+          padding: 16px 22px 16px 26px;
+          font-size: 13px;
+        }
+        .book-cta-left .btn-ghost {
+          padding: 15px 22px;
+          font-size: 13px;
+        }
+        .book-cta-left .feature-row {
+          gap: 16px;
+          margin-bottom: 32px;
+        }
+        .book-cta-right {
+          aspect-ratio: 4 / 3;
+        }
+        .book-badge {
+          padding: 10px 14px;
+          gap: 10px;
+          bottom: 14px;
+          left: 14px;
+        }
+        .book-badge .badge-text b {
+          font-size: 13px;
+        }
+        .book-badge .avatars span {
+          width: 26px;
+          height: 26px;
+        }
+        .book-cta-right .corner-tag {
+          width: 46px;
+          height: 46px;
+          font-size: 10px;
+          top: 14px;
+          right: 14px;
+        }
+      }
+
+      /* ============ TRAVEL PARTNERS (marquee) ============ */
+      .partners {
+        width: 100%;
+        background: var(--bg);
+        padding: 80px 0 86px;
+        border-top: 1px solid rgba(31, 26, 20, 0.06);
+        border-bottom: 1px solid rgba(31, 26, 20, 0.06);
+      }
+      .partners-head {
+        max-width: 1320px;
+        margin: 0 auto 36px;
+        padding: 0 56px;
+        text-align: center;
+      }
+      .partners-head .eyebrow {
+        margin: 0 auto 18px;
+      }
+      .partners-head h2 {
+        font-family: "Poppins", sans-serif;
+        font-weight: 500;
+        font-size: clamp(22px, 2.4vw, 30px);
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        margin: 0;
+        color: var(--ink);
+      }
+      .partners-head h2 em {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        color: var(--accent);
+      }
+
+      .marquee {
+        overflow: hidden;
+        mask-image: linear-gradient(
+          90deg,
+          transparent 0%,
+          #000 8%,
+          #000 92%,
+          transparent 100%
+        );
+        -webkit-mask-image: linear-gradient(
+          90deg,
+          transparent 0%,
+          #000 8%,
+          #000 92%,
+          transparent 100%
+        );
+        width: 100%;
+      }
+      .marquee-track {
+        display: flex;
+        align-items: center;
+        width: max-content;
+        animation: marquee 38s linear infinite;
+        gap: 0;
+      }
+      .marquee:hover .marquee-track {
+        animation-play-state: paused;
+      }
+      @keyframes marquee {
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      .partner-logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 56px;
+        color: var(--ink);
+        opacity: 0.55;
+        transition:
+          opacity 0.25s ease,
+          color 0.25s ease;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .partner-logo:hover {
+        opacity: 1;
+        color: var(--accent);
+      }
+      .partner-logo .mark {
+        width: 28px;
+        height: 28px;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+      }
+      .partner-logo .name {
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-size: 22px;
+        letter-spacing: -0.02em;
+      }
+      .partner-logo .name.serif {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: 0;
+      }
+      .partner-logo .name.caps {
+        font-size: 18px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+      .partner-logo .name .accent {
+        color: var(--accent);
+      }
+
+      @media (max-width: 760px) {
+        .partners {
+          padding: 60px 0 64px;
+        }
+        .partners-head {
+          padding: 0 24px;
+          margin-bottom: 28px;
+        }
+        .partner-logo {
+          padding: 0 36px;
+          gap: 10px;
+        }
+        .partner-logo .name {
+          font-size: 18px;
+        }
+        .partner-logo .name.caps {
+          font-size: 14px;
+        }
+        .partner-logo .mark {
+          width: 24px;
+          height: 24px;
+        }
+        .marquee-track {
+          animation-duration: 28s;
+        }
+      }
+
+      /* ============ BLOG / JOURNAL ============ */
+      .blog {
+        width: 100%;
+        background: linear-gradient(135deg, #ffffff 0%, #faf9f7 100%);
+        padding: 120px 56px 140px;
+        position: relative;
+      }
+      .blog-inner {
+        max-width: 1320px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+      }
+      .blog-head {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 48px;
+        align-items: end;
+        margin-bottom: 64px;
+      }
+      .blog-head .eyebrow {
+        margin: 0 0 24px;
+        width: max-content;
+      }
+      .blog-head h2 {
+        font-family: "Poppins", sans-serif;
+        font-weight: 500;
+        font-size: clamp(40px, 5vw, 72px);
+        line-height: 1.05;
+        letter-spacing: -0.035em;
+        margin: 0;
+        color: var(--ink);
+        text-wrap: balance;
+      }
+      .blog-head h2 em {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        color: var(--accent);
+      }
+      .blog-head .sub {
+        font-size: 16px;
+        line-height: 1.6;
+        color: var(--ink-soft);
+        margin: 0 0 14px;
+        max-width: 460px;
+      }
+      .blog-head .view-all {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ink);
+        text-decoration: none;
+        padding: 10px 4px 10px 0;
+        border-bottom: 1.5px solid var(--ink);
+        transition:
+          color 0.2s ease,
+          border-color 0.2s ease,
+          gap 0.2s ease;
+      }
+      .blog-head .view-all:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        gap: 16px;
+      }
+      .blog-head .view-all .arrow-wrap {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: #fff;
+        display: inline-grid;
+        place-items: center;
+        transition:
+          background 0.2s ease,
+          transform 0.2s ease;
+      }
+      .blog-head .view-all:hover .arrow-wrap {
+        background: var(--accent);
+        transform: rotate(-45deg);
+      }
+
+      .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+      }
+      .blog-card {
+        background: #fff;
+        border: 1px solid rgba(31, 26, 20, 0.07);
+        border-radius: 22px;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        transition:
+          transform 0.35s cubic-bezier(0.6, 0.05, 0.2, 1),
+          box-shadow 0.35s ease,
+          border-color 0.35s ease;
+        display: flex;
+        flex-direction: column;
+      }
+      .blog-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 30px 60px -25px rgba(31, 26, 20, 0.3);
+        border-color: rgba(199, 85, 30, 0.3);
+      }
+      .blog-card .photo {
+        position: relative;
+        aspect-ratio: 16 / 11;
+        overflow: hidden;
+        background: #e8dccb;
+      }
+      .blog-card .photo .img {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        transition: transform 1s cubic-bezier(0.6, 0.05, 0.2, 1);
+      }
+      .blog-card:hover .photo .img {
+        transform: scale(1.06);
+      }
+      .blog-card .photo .cat {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        background: rgba(255, 242, 226, 0.95);
+        color: var(--ink);
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 10.5px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-weight: 600;
+        backdrop-filter: blur(6px);
+      }
+      .blog-card .body {
+        padding: 24px 24px 26px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        flex: 1 1 auto;
+      }
+      .blog-card .meta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: var(--ink-soft);
+        font-weight: 500;
+      }
+      .blog-card .meta .dot {
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: var(--ink-soft);
+        opacity: 0.6;
+      }
+      .blog-card h3 {
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-size: 22px;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        margin: 0;
+        color: var(--ink);
+        text-wrap: balance;
+      }
+      .blog-card p {
+        font-size: 14.5px;
+        line-height: 1.6;
+        color: var(--ink-soft);
+        margin: 0;
+        text-wrap: pretty;
+      }
+      .blog-card .more {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: auto;
+        padding-top: 14px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ink);
+        transition:
+          color 0.25s ease,
+          gap 0.25s ease;
+      }
+      .blog-card .more .arrow-wrap {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--bg);
+        display: inline-grid;
+        place-items: center;
+        transition:
+          background 0.25s ease,
+          color 0.25s ease,
+          transform 0.25s ease;
+        color: var(--ink);
+      }
+      .blog-card:hover .more {
+        color: var(--accent);
+        gap: 14px;
+      }
+      .blog-card:hover .more .arrow-wrap {
+        background: var(--accent);
+        color: #fff;
+        transform: rotate(-45deg);
+      }
+
+      @media (max-width: 1100px) {
+        .blog {
+          padding: 96px 40px 110px;
+        }
+        .blog-head {
+          grid-template-columns: 1fr;
+          gap: 20px;
+          align-items: start;
+          margin-bottom: 48px;
+        }
+        .blog-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 20px;
+        }
+        .blog-card:nth-child(3) {
+          grid-column: 1 / -1;
+        }
+      }
+      @media (max-width: 760px) {
+        .blog {
+          padding: 72px 20px 90px;
+        }
+        .blog-head {
+          margin-bottom: 40px;
+        }
+        .blog-grid {
+          grid-template-columns: 1fr;
+          gap: 18px;
+        }
+        .blog-card:nth-child(3) {
+          grid-column: auto;
+        }
+        .blog-card h3 {
+          font-size: 20px;
+        }
+        .blog-card .body {
+          padding: 20px 20px 22px;
+        }
+      }
+
+      /* ============ STATS (dark band) ============ */
+      .stats {
+        width: 100%;
+        background: linear-gradient(135deg, var(--ink) 0%, #0a1330 100%);
+        color: #fff;
+        padding: 110px 56px 120px;
+        position: relative;
+        overflow: hidden;
+      }
+      .stats::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(
+          rgba(255, 255, 255, 0.06) 1px,
+          transparent 1.4px
+        );
+        background-size: 28px 28px;
+        mask-image: radial-gradient(
+          ellipse at 50% 30%,
+          transparent 25%,
+          #000 85%
+        );
+        -webkit-mask-image: radial-gradient(
+          ellipse at 50% 30%,
+          transparent 25%,
+          #000 85%
+        );
+        pointer-events: none;
+      }
+      .stats-inner {
+        max-width: 1320px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+      }
+      .stats-head {
+        text-align: center;
+        margin-bottom: 64px;
+      }
+      .stats-head .eyebrow {
+        margin: 0 auto 20px;
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.18);
+        color: #fff;
+      }
+      .stats-head .eyebrow .dot {
+        background: var(--accent);
+        box-shadow: 0 0 0 4px rgba(199, 85, 30, 0.3);
+      }
+      .stats-head h2 {
+        font-family: "Poppins", sans-serif;
+        font-weight: 500;
+        font-size: clamp(34px, 4vw, 56px);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        margin: 0;
+        color: #fff;
+        text-wrap: balance;
+      }
+      .stats-head h2 em {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        color: var(--accent);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+      }
+      .stat-item {
+        padding: 28px 32px;
+        position: relative;
+        text-align: left;
+      }
+      .stat-item + .stat-item::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 24px;
+        bottom: 24px;
+        width: 1px;
+        background: rgba(255, 255, 255, 0.16);
+      }
+      .stat-item b {
+        display: block;
+        font-family: "Poppins", sans-serif;
+        font-size: clamp(48px, 6vw, 84px);
+        font-weight: 600;
+        letter-spacing: -0.045em;
+        line-height: 0.95;
+        color: #fff;
+        margin-bottom: 12px;
+      }
+      .stat-item b em {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        color: var(--accent);
+      }
+      .stat-item .label {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.75);
+        font-weight: 500;
+        letter-spacing: 0.04em;
+      }
+      .stat-item .sub {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.5);
+        margin-top: 6px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-weight: 500;
+      }
+
+      @media (max-width: 980px) {
+        .stats {
+          padding: 88px 40px 100px;
+        }
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .stat-item:nth-child(2)::before,
+        .stat-item:nth-child(4)::before {
+          content: "";
+        }
+        .stat-item:nth-child(3)::before {
+          display: none;
+        }
+        .stat-item:nth-child(3),
+        .stat-item:nth-child(4) {
+          padding-top: 40px;
+        }
+        .stat-item:nth-child(3)::after,
+        .stat-item:nth-child(4)::after {
+          content: "";
+          position: absolute;
+          left: 16px;
+          right: 16px;
+          top: 0;
+          height: 1px;
+          background: rgba(255, 255, 255, 0.16);
+        }
+      }
+      @media (max-width: 600px) {
+        .stats {
+          padding: 72px 20px 80px;
+        }
+        .stats-head {
+          margin-bottom: 44px;
+        }
+        .stats-grid {
+          grid-template-columns: 1fr;
+          gap: 0;
+        }
+        .stat-item {
+          padding: 28px 0;
+        }
+        .stat-item + .stat-item::before {
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: auto;
+          width: 100%;
+          height: 1px;
+        }
+      }
+
+      /* ============ TESTIMONIALS ============ */
+      .testimonials {
+        width: 100%;
+        background: linear-gradient(135deg, var(--bg) 0%, #f9f5ef 100%);
+        padding: 120px 56px 140px;
+        position: relative;
+      }
+      .testimonials::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(
+          rgba(31, 26, 20, 0.06) 1px,
+          transparent 1.4px
+        );
+        background-size: 28px 28px;
+        mask-image: radial-gradient(
+          ellipse at 50% 30%,
+          transparent 30%,
+          #000 85%
+        );
+        -webkit-mask-image: radial-gradient(
+          ellipse at 50% 30%,
+          transparent 30%,
+          #000 85%
+        );
+        pointer-events: none;
+      }
+      .testimonials-inner {
+        max-width: 1320px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+      }
+      .testimonials-head {
+        text-align: center;
+        margin-bottom: 64px;
+      }
+      .testimonials-head .eyebrow {
+        margin: 0 auto 20px;
+      }
+      .testimonials-head h2 {
+        font-family: "Poppins", sans-serif;
+        font-weight: 500;
+        font-size: clamp(40px, 5vw, 72px);
+        line-height: 1.05;
+        letter-spacing: -0.035em;
+        margin: 0 0 18px;
+        color: var(--ink);
+        text-wrap: balance;
+      }
+      .testimonials-head h2 em {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        color: var(--accent);
+      }
+      .testimonials-head .sub {
+        font-size: 16px;
+        line-height: 1.6;
+        color: var(--ink-soft);
+        margin: 0 auto;
+        max-width: 520px;
+      }
+
+      .test-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .test-card {
+        background: #fff;
+        border: 1px solid rgba(31, 26, 20, 0.07);
+        border-radius: 22px;
+        padding: 36px 32px 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        transition:
+          transform 0.35s cubic-bezier(0.6, 0.05, 0.2, 1),
+          box-shadow 0.35s ease,
+          border-color 0.35s ease;
+        position: relative;
+      }
+      .test-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 24px 50px -25px rgba(31, 26, 20, 0.25);
+        border-color: rgba(199, 85, 30, 0.3);
+      }
+      .test-card .quote-mark {
+        position: absolute;
+        top: 18px;
+        right: 26px;
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 80px;
+        line-height: 1;
+        color: var(--accent);
+        opacity: 0.18;
+        pointer-events: none;
+      }
+      .test-card .stars {
+        display: inline-flex;
+        gap: 3px;
+        color: var(--accent);
+      }
+      .test-card blockquote {
+        margin: 0;
+        font-family: "Fraunces", serif;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 18px;
+        line-height: 1.55;
+        color: var(--ink);
+        text-wrap: pretty;
+        flex: 1 1 auto;
+      }
+      .test-card .author {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(31, 26, 20, 0.08);
+      }
+      .test-card .author .avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background-size: cover;
+        background-position: center;
+        background-color: var(--bg);
+        flex-shrink: 0;
+      }
+      .test-card .author .info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .test-card .author .info b {
+        font-family: "Poppins", sans-serif;
+        font-size: 14.5px;
+        font-weight: 600;
+        color: var(--ink);
+        letter-spacing: -0.01em;
+      }
+      .test-card .author .info span {
+        font-size: 12.5px;
+        color: var(--ink-soft);
+        font-weight: 500;
+      }
+
+      @media (max-width: 1100px) {
+        .testimonials {
+          padding: 96px 40px 110px;
+        }
+        .test-grid {
+          grid-template-columns: 1fr;
+          gap: 18px;
+        }
+      }
+      @media (max-width: 600px) {
+        .testimonials {
+          padding: 72px 20px 90px;
+        }
+        .testimonials-head {
+          margin-bottom: 44px;
+        }
+        .test-card {
+          padding: 28px 24px 24px;
+          gap: 18px;
+        }
+        .test-card blockquote {
+          font-size: 16.5px;
+        }
+        .test-card .quote-mark {
+          font-size: 60px;
+          top: 12px;
+          right: 18px;
+        }
+      }
+
+      /* ============ FOOTER ============ */
+      .footer {
+        width: 100%;
+        background: var(--ink);
+        color: rgba(255, 255, 255, 0.78);
+        padding: 100px 56px 32px;
+        position: relative;
+        overflow: hidden;
+      }
+      .footer::before {
+        content: "Ostern Reisen";
+        position: absolute;
+        left: -8px;
+        bottom: -60px;
+        font-family: "Poppins", sans-serif;
+        font-weight: 700;
+        font-size: clamp(220px, 26vw, 380px);
+        line-height: 0.85;
+        letter-spacing: -0.06em;
+        color: rgba(255, 255, 255, 0.035);
+        pointer-events: none;
+        user-select: none;
+      }
+      .footer-inner {
+        max-width: 1320px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* Top: brand + newsletter */
+      .footer-top {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 64px;
+        padding-bottom: 64px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        margin-bottom: 56px;
+        align-items: end;
+      }
+      .footer-brand .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-family: "Poppins", sans-serif;
+        font-weight: 700;
+        font-size: 28px;
+        letter-spacing: -0.02em;
+        color: #fff;
+        text-decoration: none;
+        margin-bottom: 28px;
+      }
+      .footer-brand .brand .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 0 5px rgba(199, 85, 30, 0.25);
+      }
+      .footer-brand .brand i {
+        font-style: italic;
+        font-weight: 500;
+        color: var(--accent);
+      }
+      .footer-brand p {
+        font-family: "Fraunces", serif;
+        font-weight: 400;
+        font-style: italic;
+        font-size: 22px;
+        line-height: 1.35;
+        color: rgba(255, 255, 255, 0.85);
+        margin: 0 0 28px;
+        max-width: 480px;
+        text-wrap: balance;
+        text-align: left;
+      }
+      .footer-brand .contact-row {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .footer-brand .contact-row a,
+      .footer-brand .contact-row span {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.78);
+        text-decoration: none;
+        transition: color 0.2s ease;
+      }
+      .footer-brand .contact-row a:hover {
+        color: var(--accent);
+      }
+      .footer-brand .contact-row .ico {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+      }
+
+      /* Newsletter */
+      .newsletter h4 {
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-size: 20px;
+        letter-spacing: -0.02em;
+        color: #fff;
+        margin: 0 0 10px;
+      }
+      .newsletter h4 em {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        color: var(--accent);
+      }
+      .newsletter p {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.65);
+        margin: 0 0 20px;
+        line-height: 1.55;
+        max-width: 380px;
+        text-align: left;
+      }
+      .newsletter form {
+        display: flex;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
+        padding: 6px 6px 6px 20px;
+        max-width: 440px;
+        transition:
+          border-color 0.2s ease,
+          background 0.2s ease;
+      }
+      .newsletter form:focus-within {
+        border-color: var(--accent);
+        background: rgba(255, 255, 255, 0.12);
+      }
+      .newsletter input {
+        flex: 1 1 auto;
+        background: transparent;
+        border: 0;
+        outline: 0;
+        color: #fff;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        padding: 12px 0;
+        min-width: 0;
+      }
+      .newsletter input::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .newsletter button {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 12px 22px;
+        border-radius: 999px;
+        background: var(--accent);
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: background 0.2s ease;
+        flex-shrink: 0;
+      }
+      .newsletter button:hover {
+        background: #fff;
+        color: var(--ink);
+      }
+
+      /* social icons under subscribe field */
+      .newsletter-socials {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-top: 22px;
+      }
+      .newsletter-socials .label {
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.45);
+        margin-right: 4px;
+      }
+      .newsletter-socials a {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        display: grid;
+        place-items: center;
+        color: rgba(255, 255, 255, 0.85);
+        background: rgba(255, 255, 255, 0.04);
+        transition:
+          background 0.2s ease,
+          color 0.2s ease,
+          border-color 0.2s ease,
+          transform 0.2s ease;
+        text-decoration: none;
+      }
+      .newsletter-socials a:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+        transform: translateY(-2px);
+      }
+
+      /* Middle: link columns */
+      .footer-cols {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 32px;
+        padding-bottom: 56px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        margin-bottom: 32px;
+      }
+      .footer-col h5 {
+        font-family: "Poppins", sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.95);
+        margin: 0 0 22px;
+      }
+      .footer-col ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .footer-col ul a {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.62);
+        text-decoration: none;
+        transition:
+          color 0.2s ease,
+          padding-left 0.2s ease;
+        position: relative;
+        display: inline-block;
+      }
+      .footer-col ul a:hover {
+        color: var(--accent);
+        padding-left: 12px;
+      }
+      .footer-col ul a:hover::before {
+        content: "\2192";
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+      }
+
+      /* Bottom row */
+      .footer-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        padding-top: 24px;
+        flex-wrap: wrap;
+      }
+      .footer-bottom .copy {
+        font-size: 12.5px;
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 0.02em;
+      }
+      .footer-bottom .legal {
+        display: inline-flex;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+      .footer-bottom .legal a {
+        font-size: 12.5px;
+        color: rgba(255, 255, 255, 0.55);
+        text-decoration: none;
+        transition: color 0.2s ease;
+      }
+      .footer-bottom .legal a:hover {
+        color: var(--accent);
+      }
+      .footer-bottom .socials {
+        display: inline-flex;
+        gap: 10px;
+      }
+      .footer-bottom .socials a {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        display: grid;
+        place-items: center;
+        color: rgba(255, 255, 255, 0.75);
+        transition:
+          background 0.2s ease,
+          color 0.2s ease,
+          border-color 0.2s ease,
+          transform 0.2s ease;
+        text-decoration: none;
+      }
+      .footer-bottom .socials a:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+        transform: translateY(-2px);
+      }
+
+      @media (max-width: 1100px) {
+        .footer {
+          padding: 88px 40px 32px;
+        }
+        .footer-top {
+          grid-template-columns: 1fr;
+          gap: 48px;
+          padding-bottom: 48px;
+          margin-bottom: 44px;
+        }
+        .footer-cols {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 36px 32px;
+          padding-bottom: 44px;
+          margin-bottom: 24px;
+        }
+      }
+      @media (max-width: 600px) {
+        .footer {
+          padding: 64px 24px 28px;
+        }
+        .footer-brand p {
+          font-size: 18px;
+        }
+        .footer-bottom {
+          gap: 18px;
+        }
+        .footer-bottom .copy {
+          width: 100%;
+          text-align: center;
+          order: 3;
+        }
+        .footer-bottom .legal {
+          justify-content: center;
+          width: 100%;
+          gap: 16px;
+        }
+        .footer-bottom .socials {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ============ NAV BAR ============ -->
+    <nav class="nav" id="nav">
+      <a href="#" class="brand">
+        <span class="dot"></span>
+        Ostern Reisen<i>.</i>
+      </a>
+
+      <ul class="menu">
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Destinations</a></li>
+        <li class="has-drop">
+          <a href="#" id="toursLink">
+            Tours
+            <svg
+              class="chev"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </a>
+          <div class="dropdown" role="menu">
+            <a href="#">
+              <span class="icon">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 21v-13l9-5 9 5v13" />
+                  <path d="M9 21V12h6v9" />
+                </svg>
+              </span>
+              <span class="info"
+                ><b>Heritage Tours</b
+                ><span>Forts, palaces &amp; temples</span></span
+              >
+            </a>
+            <a href="#">
+              <span class="icon">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M12 22s8-7 8-13a8 8 0 1 0-16 0c0 6 8 13 8 13z" />
+                  <circle cx="12" cy="9" r="3" />
+                </svg>
+              </span>
+              <span class="info"
+                ><b>Cultural Trails</b
+                ><span>Festivals, food &amp; craft</span></span
+              >
+            </a>
+            <a href="#">
+              <span class="icon">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="m3 20 6-12 4 8 3-6 5 10z" />
+                </svg>
+              </span>
+              <span class="info"
+                ><b>Adventure</b><span>Himalayan treks, safaris</span></span
+              >
+            </a>
+            <a href="#">
+              <span class="icon">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="9" />
+                  <path
+                    d="M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18M3 12h18"
+                  />
+                </svg>
+              </span>
+              <span class="info"
+                ><b>Private Journeys</b
+                ><span>Custom itineraries, on request</span></span
+              >
+            </a>
+            <a href="#">
+              <span class="icon">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M4 7h16M4 12h16M4 17h10" />
+                </svg>
+              </span>
+              <span class="info"
+                ><b>All Itineraries</b
+                ><span>Browse the full catalog</span></span
+              >
+            </a>
+          </div>
+        </li>
+        <li><a href="#">Experience</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+
+      <div class="actions">
+        <button class="icon-btn" aria-label="Search" type="button">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+        </button>
+        <button class="nav-cta" type="button">
+          Book Now
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 12h14" />
+            <path d="m13 6 6 6-6 6" />
+          </svg>
+        </button>
+      </div>
+
+      <button class="burger" id="burger" aria-label="Menu" type="button">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      </button>
+
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="#" class="active">Home</a>
+        <a href="#">About</a>
+        <a href="#">Destinations</a>
+        <div class="group">Tours</div>
+        <a href="#">Heritage Tours</a>
+        <a href="#">Cultural Trails</a>
+        <a href="#">Adventure</a>
+        <a href="#">Private Journeys</a>
+        <a href="#">All Itineraries</a>
+        <div class="group">More</div>
+        <a href="#">Experience</a>
+        <a href="#">Blog</a>
+        <a href="#">Contact</a>
+      </div>
+    </nav>
+
+    <section class="hero" id="hero">
+      <div class="counter">
+        <b id="cIdx">01</b><span>/ <span id="cTotal">05</span></span>
+      </div>
+
+      <div class="left">
+        <div class="eyebrow">
+          <span class="dot"></span><span>Indian heritage · series 01</span>
+        </div>
+        <h1 class="title">
+          <span class="city-line">
+            <span class="city-name" id="cityName">Jaipur</span>
+          </span>
+        </h1>
+        <p class="country" id="cityCountry">Rajasthan · The Pink City</p>
+        <p class="desc" id="cityDesc">
+          A walled capital painted in terracotta pink, where Rajput palaces,
+          stepwells, and bazaars unfold beneath the Aravalli hills. Every
+          courtyard is a study in symmetry and shadow.
+        </p>
+        <div class="cta-row">
+          <button class="btn" type="button">
+            <span>Plan your trip</span>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m13 6 6 6-6 6" />
+            </svg>
+          </button>
+          <div class="stat">
+            <b id="stat1">18°– 34°</b>
+            <span>Avg · this month</span>
+          </div>
+        </div>
+
+        <!-- Mobile-only arrow row (rendered below the stack on mobile due to source order tricks) -->
+        <div class="arrow-row">
+          <button class="arrow" id="prevMobile" aria-label="Previous">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+          <button class="arrow" id="nextMobile" aria-label="Next">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m9 6 6 6-6 6" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="right" id="right" data-num="01">
+        <div class="stack" id="stack"></div>
+      </div>
+
+      <!-- desktop arrows -->
+      <button class="arrow abs left" id="prev" aria-label="Previous">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m15 18-6-6 6-6" />
+        </svg>
+      </button>
+      <button class="arrow abs right" id="next" aria-label="Next">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m9 6 6 6-6 6" />
+        </svg>
+      </button>
+
+      <div class="dots" id="dots"></div>
+    </section>
+
+    <!-- ============ ICONIC ATTRACTIONS ============ -->
+    <section class="iconic" id="iconic">
+      <div class="iconic-inner">
+        <div class="iconic-head">
+          <div class="eyebrow">
+            <span class="dot"></span><span>Why travellers choose us</span>
+          </div>
+          <h2>Iconic attractions,<br /><em>unforgettable</em> experiences.</h2>
+        </div>
+
+        <div class="iconic-grid">
+          <div class="iconic-feat">
+            <span class="num">01</span>
+            <span class="feat-icon">
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M9 11 4 6V3a1 1 0 0 1 1-1h3l5 5" />
+                <path d="m13 8 8 8-3 3-8-8" />
+                <path d="m5 14 1.5 1.5L4 18l-2-2 3-3z" />
+                <path d="m18 13 3 3" />
+              </svg>
+            </span>
+            <h3>One-click Booking</h3>
+            <p>
+              Enjoy one-click booking for a quick, easy, and hassle-free travel
+              experience — from search to confirmation in under a minute.
+            </p>
+          </div>
+
+          <div class="iconic-feat">
+            <span class="num">02</span>
+            <span class="feat-icon">
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M20.59 13.41 13.42 20.6a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"
+                />
+                <circle cx="7" cy="7" r="1.5" />
+              </svg>
+            </span>
+            <h3>Deals &amp; Discounts</h3>
+            <p>
+              Exclusive deals and special discounts on top travel packages —
+              handpicked offers for hill escapes, beach stays, and curated
+              journeys.
+            </p>
+          </div>
+
+          <div class="iconic-feat">
+            <span class="num">03</span>
+            <span class="feat-icon">
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polygon
+                  points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"
+                />
+              </svg>
+            </span>
+            <h3>Local Guidance</h3>
+            <p>
+              Expert local guidance for authentic, hassle-free travel
+              experiences — vetted hosts who know the back-streets, the right
+              time, the right table.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FEATURED DESTINATIONS ============ -->
+    <section class="destinations" id="destinations">
+      <div class="dest-head">
+        <div>
+          <div class="eyebrow">
+            <span class="dot"></span><span>Featured Destinations</span>
+          </div>
+          <h2>Places that move <em>slowly</em>,<br />and stay with you.</h2>
+        </div>
+        <div>
+          <p class="sub">
+            A handpicked set of journeys — heritage capitals, hill escapes, and
+            beach getaways from across India and around the world. Quiet places
+            shaped by water, stone, and ritual.
+          </p>
+          <a href="#" class="view-all">
+            Browse all destinations
+            <span class="arrow-wrap">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="m13 6 6 6-6 6" />
+              </svg>
+            </span>
+          </a>
+        </div>
+      </div>
+
+      <div class="dest-grid">
+        <a href="#" class="dest-card">
+          <div class="photo">
+            <div
+              class="img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1599661046289-e31897846e41?w=900&q=85&quot;);
+              "
+            ></div>
+            <span class="tag">Heritage · India</span>
+          </div>
+          <div class="info">
+            <div class="info-text">
+              <b>Jaipur</b>
+              <span class="tagline">Forts &amp; pink bazaars</span>
+              <span class="duration">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="5" width="18" height="16" rx="2" />
+                  <path d="M3 9h18M8 3v4M16 3v4" />
+                </svg>
+                5 Days &middot; 4 Nights
+              </span>
+            </div>
+            <span class="go"
+              ><svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="m13 6 6 6-6 6" /></svg
+            ></span>
+          </div>
+        </a>
+
+        <a href="#" class="dest-card">
+          <div class="photo">
+            <div
+              class="img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=900&q=85&quot;);
+              "
+            ></div>
+            <span class="tag">Beach · Greece</span>
+          </div>
+          <div class="info">
+            <div class="info-text">
+              <b>Santorini</b>
+              <span class="tagline">White cliffs over the Aegean</span>
+              <span class="duration">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="5" width="18" height="16" rx="2" />
+                  <path d="M3 9h18M8 3v4M16 3v4" />
+                </svg>
+                6 Days &middot; 5 Nights
+              </span>
+            </div>
+            <span class="go"
+              ><svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="m13 6 6 6-6 6" /></svg
+            ></span>
+          </div>
+        </a>
+
+        <a href="#" class="dest-card">
+          <div class="photo">
+            <div
+              class="img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=900&q=85&quot;);
+              "
+            ></div>
+            <span class="tag">Hills · India</span>
+          </div>
+          <div class="info">
+            <div class="info-text">
+              <b>Manali</b>
+              <span class="tagline">Himalayan pine &amp; snow</span>
+              <span class="duration">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="5" width="18" height="16" rx="2" />
+                  <path d="M3 9h18M8 3v4M16 3v4" />
+                </svg>
+                6 Days &middot; 5 Nights
+              </span>
+            </div>
+            <span class="go"
+              ><svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="m13 6 6 6-6 6" /></svg
+            ></span>
+          </div>
+        </a>
+
+        <a href="#" class="dest-card">
+          <div class="photo">
+            <div
+              class="img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=900&q=85&quot;);
+              "
+            ></div>
+            <span class="tag">Beach · Maldives</span>
+          </div>
+          <div class="info">
+            <div class="info-text">
+              <b>Maldives</b>
+              <span class="tagline">Overwater villas &amp; reef</span>
+              <span class="duration">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="5" width="18" height="16" rx="2" />
+                  <path d="M3 9h18M8 3v4M16 3v4" />
+                </svg>
+                5 Days &middot; 4 Nights
+              </span>
+            </div>
+            <span class="go"
+              ><svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="m13 6 6 6-6 6" /></svg
+            ></span>
+          </div>
+        </a>
+
+        <a href="#" class="dest-card">
+          <div class="photo">
+            <div
+              class="img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=900&q=85&quot;);
+              "
+            ></div>
+            <span class="tag">Beach · India</span>
+          </div>
+          <div class="info">
+            <div class="info-text">
+              <b>Goa</b>
+              <span class="tagline">Palms, surf &amp; Portuguese villas</span>
+              <span class="duration">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="5" width="18" height="16" rx="2" />
+                  <path d="M3 9h18M8 3v4M16 3v4" />
+                </svg>
+                4 Days &middot; 3 Nights
+              </span>
+            </div>
+            <span class="go"
+              ><svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="m13 6 6 6-6 6" /></svg
+            ></span>
+          </div>
+        </a>
+
+        <a href="#" class="dest-card">
+          <div class="photo">
+            <div
+              class="img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=900&q=85&quot;);
+              "
+            ></div>
+            <span class="tag">Beach · Indonesia</span>
+          </div>
+          <div class="info">
+            <div class="info-text">
+              <b>Bali</b>
+              <span class="tagline">Rice terraces meet ocean</span>
+              <span class="duration">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="5" width="18" height="16" rx="2" />
+                  <path d="M3 9h18M8 3v4M16 3v4" />
+                </svg>
+                7 Days &middot; 6 Nights
+              </span>
+            </div>
+            <span class="go"
+              ><svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="m13 6 6 6-6 6" /></svg
+            ></span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ SERVICES ============ -->
+    <section class="services" id="services">
+      <div class="svc-head">
+        <div class="eyebrow" style="margin-left: auto; margin-right: auto">
+          <span class="dot"></span><span>What we handle</span>
+        </div>
+        <h2>Everything between <em>here</em> and there.</h2>
+        <p class="sub">
+          From the first map you sketch to the last airport pickup — a small
+          team of planners, guides, and local fixers stitches the whole journey
+          together.
+        </p>
+      </div>
+
+      <div class="svc-grid">
+        <a href="#" class="svc-card" data-num="01">
+          <span class="svc-icon">
+            <svg
+              width="26"
+              height="26"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M9 18V5l12-2v13" />
+              <circle cx="6" cy="18" r="3" />
+              <circle cx="18" cy="16" r="3" />
+            </svg>
+          </span>
+          <h3>Personalised Itineraries</h3>
+          <p>
+            Day-by-day plans built around your pace, your interests, and the
+            rhythm of each place.
+          </p>
+          <span class="more"
+            >Plan with us
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m13 6 6 6-6 6" /></svg
+          ></span>
+        </a>
+
+        <a href="#" class="svc-card" data-num="02">
+          <span class="svc-icon">
+            <svg
+              width="26"
+              height="26"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+              />
+              <path d="M14 2v6h6" />
+              <path d="M9 14h6M9 18h4" />
+            </svg>
+          </span>
+          <h3>Visa &amp; Documentation</h3>
+          <p>
+            End-to-end support for visas, travel insurance, and the paperwork no
+            one wants to read.
+          </p>
+          <span class="more"
+            >Get help
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m13 6 6 6-6 6" /></svg
+          ></span>
+        </a>
+
+        <a href="#" class="svc-card" data-num="03">
+          <span class="svc-icon">
+            <svg
+              width="26"
+              height="26"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5L3 7.5l5 4-2.5 4.5L1 14l-1 1 4 2.5L6.5 22l1-1-1.5-4.5L9 14l4 5 .5-.5c.4-.2.6-.6.5-1.1z"
+              />
+            </svg>
+          </span>
+          <h3>Flights &amp; Transfers</h3>
+          <p>
+            Best-fare flight bookings, airport pickups, and seamless transit
+            between every stop.
+          </p>
+          <span class="more"
+            >See routes
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m13 6 6 6-6 6" /></svg
+          ></span>
+        </a>
+
+        <a href="#" class="svc-card" data-num="04">
+          <span class="svc-icon">
+            <svg
+              width="26"
+              height="26"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M2 21v-9l10-7 10 7v9" />
+              <path d="M9 21v-8h6v8" />
+              <path d="M2 21h20" />
+            </svg>
+          </span>
+          <h3>Curated Stays</h3>
+          <p>
+            Boutique hotels, mountain lodges, beach villas — every place chosen
+            for its character.
+          </p>
+          <span class="more"
+            >Browse stays
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m13 6 6 6-6 6" /></svg
+          ></span>
+        </a>
+
+        <a href="#" class="svc-card" data-num="05">
+          <span class="svc-icon">
+            <svg
+              width="26"
+              height="26"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 22s8-7 8-13a8 8 0 1 0-16 0c0 6 8 13 8 13z" />
+              <circle cx="12" cy="9" r="3" />
+            </svg>
+          </span>
+          <h3>Local Guides &amp; Experiences</h3>
+          <p>
+            Vetted guides, cooking classes, craft workshops, and access to
+            places guidebooks miss.
+          </p>
+          <span class="more"
+            >Meet our guides
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m13 6 6 6-6 6" /></svg
+          ></span>
+        </a>
+
+        <a href="#" class="svc-card" data-num="06">
+          <span class="svc-icon">
+            <svg
+              width="26"
+              height="26"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.57 2.8.7A2 2 0 0 1 22 16.92z"
+              />
+            </svg>
+          </span>
+          <h3>24/7 Travel Support</h3>
+          <p>
+            On-trip help reachable any hour, in any timezone — for the things
+            you can't plan for.
+          </p>
+          <span class="more"
+            >Talk to us
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m13 6 6 6-6 6" /></svg
+          ></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ COUNTRIES WE COVER ============ -->
+    <section class="countries" id="countries">
+      <div class="countries-inner">
+        <div class="countries-head">
+          <div>
+            <div class="eyebrow">
+              <span class="dot"></span><span>Where we'll take you</span>
+            </div>
+            <h2>Offers across <em>twenty&hairsp;+</em> countries.</h2>
+          </div>
+          <p class="sub">
+            From the foothills of the Himalayas to the cliffs of Santorini —
+            exclusive packages, seasonal deals, and slow-travel itineraries
+            across the places we know best.
+          </p>
+        </div>
+
+        <div class="country-grid">
+          <a href="#" class="country-card">
+            <div
+              class="country-img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1599661046289-e31897846e41?w=900&q=85&quot;);
+              "
+            ></div>
+            <span class="ctag">Heritage</span>
+            <div class="country-info">
+              <div class="country-info-text">
+                <b>India</b><span>14 destinations</span>
+              </div>
+              <span class="arrow"
+                ><svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" /></svg
+              ></span>
+            </div>
+          </a>
+
+          <a href="#" class="country-card">
+            <div
+              class="country-img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=900&q=85&quot;);
+              "
+            ></div>
+            <span class="ctag">Hills</span>
+            <div class="country-info">
+              <div class="country-info-text">
+                <b>Switzerland</b><span>5 destinations</span>
+              </div>
+              <span class="arrow"
+                ><svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" /></svg
+              ></span>
+            </div>
+          </a>
+
+          <a href="#" class="country-card">
+            <div
+              class="country-img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=900&q=85&quot;);
+              "
+            ></div>
+            <span class="ctag">Beach</span>
+            <div class="country-info">
+              <div class="country-info-text">
+                <b>Greece</b><span>6 destinations</span>
+              </div>
+              <span class="arrow"
+                ><svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" /></svg
+              ></span>
+            </div>
+          </a>
+
+          <a href="#" class="country-card">
+            <div
+              class="country-img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=900&q=85&quot;);
+              "
+            ></div>
+            <span class="ctag">Beach</span>
+            <div class="country-info">
+              <div class="country-info-text">
+                <b>Maldives</b><span>3 destinations</span>
+              </div>
+              <span class="arrow"
+                ><svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" /></svg
+              ></span>
+            </div>
+          </a>
+
+          <a href="#" class="country-card">
+            <div
+              class="country-img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=900&q=85&quot;);
+              "
+            ></div>
+            <span class="ctag">Beach</span>
+            <div class="country-info">
+              <div class="country-info-text">
+                <b>Indonesia</b><span>5 destinations</span>
+              </div>
+              <span class="arrow"
+                ><svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" /></svg
+              ></span>
+            </div>
+          </a>
+
+          <a href="#" class="country-card">
+            <div
+              class="country-img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1601581875309-fafbf2d3ed3a?w=900&q=85&quot;);
+              "
+            ></div>
+            <span class="ctag">Hills</span>
+            <div class="country-info">
+              <div class="country-info-text">
+                <b>Norway</b><span>4 destinations</span>
+              </div>
+              <span class="arrow"
+                ><svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" /></svg
+              ></span>
+            </div>
+          </a>
+
+          <a href="#" class="country-card">
+            <div
+              class="country-img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=900&q=85&quot;);
+              "
+            ></div>
+            <span class="ctag">Heritage</span>
+            <div class="country-info">
+              <div class="country-info-text">
+                <b>Japan</b><span>5 destinations</span>
+              </div>
+              <span class="arrow"
+                ><svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" /></svg
+              ></span>
+            </div>
+          </a>
+
+          <a href="#" class="country-card">
+            <div
+              class="country-img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=900&q=85&quot;);
+              "
+            ></div>
+            <span class="ctag">Coast</span>
+            <div class="country-info">
+              <div class="country-info-text">
+                <b>Italy</b><span>6 destinations</span>
+              </div>
+              <span class="arrow"
+                ><svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" /></svg
+              ></span>
+            </div>
+          </a>
+        </div>
+
+        <div class="countries-foot">
+          <a href="#">
+            See all countries
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m13 6 6 6-6 6" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BOOK CTA (split — left content, right image) ============ -->
+    <section class="book-cta" id="book-cta">
+      <div class="book-cta-inner">
+        <div class="book-cta-left">
+          <div class="eyebrow">
+            <span class="dot"></span><span>Ready to go?</span>
+          </div>
+          <h2>Book your next <em>adventurous</em> trip.</h2>
+          <p>
+            Tell us where you've been dreaming about — a Himalayan trek, an
+            Aegean island hop, a quiet week on a Norwegian fjord — and our
+            planners will sketch the first draft within 48 hours.
+          </p>
+
+          <ul class="feature-row">
+            <li>Hand-crafted itinerary</li>
+            <li>Vetted local guides</li>
+            <li>24/7 on-trip support</li>
+          </ul>
+
+          <div class="btn-row">
+            <button class="btn-primary" type="button">
+              <span>Plan my trip</span>
+              <span class="arrow-wrap">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" />
+                </svg>
+              </span>
+            </button>
+            <a href="#" class="btn-ghost">
+              Talk to a planner
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.57 2.8.7A2 2 0 0 1 22 16.92z"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="book-cta-right">
+          <div
+            class="img"
+            style="
+              background-image: url(&quot;https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1400&q=85&quot;);
+            "
+          ></div>
+          <span class="corner-tag">since<br />2014</span>
+          <div class="book-badge">
+            <div class="avatars">
+              <span
+                style="
+                  background-image: url(&quot;https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80&quot;);
+                "
+              ></span>
+              <span
+                style="
+                  background-image: url(&quot;https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80&quot;);
+                "
+              ></span>
+              <span
+                style="
+                  background-image: url(&quot;https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&q=80&quot;);
+                "
+              ></span>
+            </div>
+            <div class="badge-text">
+              <b>4,200+ travellers</b>
+              <span>booked with us this year</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TRAVEL PARTNERS (marquee) ============ -->
+    <section class="partners" id="partners">
+      <div class="partners-head">
+        <div class="eyebrow">
+          <span class="dot"></span><span>Travel partners</span>
+        </div>
+        <h2>
+          Booking, flying, and staying with the <em>best in the business</em>.
+        </h2>
+      </div>
+
+      <div class="marquee">
+        <div class="marquee-track">
+          <!-- First set -->
+          <span class="partner-logo"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z"
+                /></svg></span
+            ><span class="name"
+              >Skybound<span class="accent">.</span></span
+            ></span
+          >
+          <span class="partner-logo"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path
+                  d="M2 12h20M12 2a14 14 0 0 1 0 20M12 2a14 14 0 0 0 0 20"
+                /></svg></span
+            ><span class="name serif">Atlas Stays</span></span
+          >
+          <span class="partner-logo"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M3 21v-13l9-5 9 5v13" />
+                <path d="M9 21V12h6v9" /></svg></span
+            ><span class="name caps">Voyage Co.</span></span
+          >
+          <span class="partner-logo"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <path d="M22 4 12 14.01l-3-3" /></svg></span
+            ><span class="name">Northwind</span></span
+          >
+          <span class="partner-logo"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <circle cx="12" cy="12" r="4" /></svg></span
+            ><span class="name serif">Meridian &amp; Co</span></span
+          >
+          <span class="partner-logo"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z" />
+                <circle cx="12" cy="12" r="3" /></svg></span
+            ><span class="name">Wayfarer</span></span
+          >
+          <span class="partner-logo"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="m12 2 2.4 6.5L21 9.5l-5 4.5 1.5 6.5L12 17l-5.5 3.5L8 14 3 9.5l6.6-1z"
+                /></svg></span
+            ><span class="name caps">Lumen Trails</span></span
+          >
+          <span class="partner-logo"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M3 7c4 0 4-3 8-3s4 3 8 3" />
+                <path d="M3 12c4 0 4-3 8-3s4 3 8 3" />
+                <path d="M3 17c4 0 4-3 8-3s4 3 8 3" /></svg></span
+            ><span class="name serif">Halcyon Resorts</span></span
+          >
+          <span class="partner-logo"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m10 17 5-5-5-5" />
+                <path d="M3 12h12" />
+                <path d="M21 4v16" /></svg></span
+            ><span class="name"
+              >Verandah<span class="accent">.</span></span
+            ></span
+          >
+
+          <!-- Duplicate for seamless loop -->
+          <span class="partner-logo" aria-hidden="true"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z"
+                /></svg></span
+            ><span class="name"
+              >Skybound<span class="accent">.</span></span
+            ></span
+          >
+          <span class="partner-logo" aria-hidden="true"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path
+                  d="M2 12h20M12 2a14 14 0 0 1 0 20M12 2a14 14 0 0 0 0 20"
+                /></svg></span
+            ><span class="name serif">Atlas Stays</span></span
+          >
+          <span class="partner-logo" aria-hidden="true"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M3 21v-13l9-5 9 5v13" />
+                <path d="M9 21V12h6v9" /></svg></span
+            ><span class="name caps">Voyage Co.</span></span
+          >
+          <span class="partner-logo" aria-hidden="true"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <path d="M22 4 12 14.01l-3-3" /></svg></span
+            ><span class="name">Northwind</span></span
+          >
+          <span class="partner-logo" aria-hidden="true"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <circle cx="12" cy="12" r="4" /></svg></span
+            ><span class="name serif">Meridian &amp; Co</span></span
+          >
+          <span class="partner-logo" aria-hidden="true"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z" />
+                <circle cx="12" cy="12" r="3" /></svg></span
+            ><span class="name">Wayfarer</span></span
+          >
+          <span class="partner-logo" aria-hidden="true"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="m12 2 2.4 6.5L21 9.5l-5 4.5 1.5 6.5L12 17l-5.5 3.5L8 14 3 9.5l6.6-1z"
+                /></svg></span
+            ><span class="name caps">Lumen Trails</span></span
+          >
+          <span class="partner-logo" aria-hidden="true"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M3 7c4 0 4-3 8-3s4 3 8 3" />
+                <path d="M3 12c4 0 4-3 8-3s4 3 8 3" />
+                <path d="M3 17c4 0 4-3 8-3s4 3 8 3" /></svg></span
+            ><span class="name serif">Halcyon Resorts</span></span
+          >
+          <span class="partner-logo" aria-hidden="true"
+            ><span class="mark"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m10 17 5-5-5-5" />
+                <path d="M3 12h12" />
+                <path d="M21 4v16" /></svg></span
+            ><span class="name"
+              >Verandah<span class="accent">.</span></span
+            ></span
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BLOG / JOURNAL ============ -->
+    <section class="blog" id="blog">
+      <div class="blog-inner">
+        <div class="blog-head">
+          <div>
+            <div class="eyebrow">
+              <span class="dot"></span><span>From the journal</span>
+            </div>
+            <h2>Field notes,<br /><em>slow stories</em>, &amp; ideas.</h2>
+          </div>
+          <div>
+            <p class="sub">
+              Travelogues and small dispatches from the road — packing thoughts,
+              regional tea rituals, where to eat after midnight, and other quiet
+              observations from our planners and guides.
+            </p>
+            <a href="#" class="view-all">
+              Read the journal
+              <span class="arrow-wrap">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" />
+                </svg>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <div class="blog-grid">
+          <a href="#" class="blog-card">
+            <div class="photo">
+              <div
+                class="img"
+                style="
+                  background-image: url(&quot;https://images.unsplash.com/photo-1599661046289-e31897846e41?w=600&q=80&quot;);
+                "
+              ></div>
+              <span class="cat">Travel Journal</span>
+            </div>
+            <div class="body">
+              <div class="meta">
+                <span>03 Apr 2026</span>
+                <span class="dot"></span>
+                <span>6 min read</span>
+              </div>
+              <h3>A week in Jaipur, slowly.</h3>
+              <p>
+                Skipping the must-sees and walking the same three lanes until
+                they begin to recognise you — what a slower visit to the pink
+                city actually looks like.
+              </p>
+              <span class="more">
+                View article
+                <span class="arrow-wrap">
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M5 12h14" />
+                    <path d="m13 6 6 6-6 6" />
+                  </svg>
+                </span>
+              </span>
+            </div>
+          </a>
+
+          <a href="#" class="blog-card">
+            <div class="photo">
+              <div
+                class="img"
+                style="
+                  background-image: url(&quot;https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=85&quot;);
+                "
+              ></div>
+              <span class="cat">Field Notes</span>
+            </div>
+            <div class="body">
+              <div class="meta">
+                <span>22 Mar 2026</span>
+                <span class="dot"></span>
+                <span>4 min read</span>
+              </div>
+              <h3>Why the Alps feel different in autumn.</h3>
+              <p>
+                Light low on the larch trees, half-empty cable cars, and the
+                small economy of villages between high seasons — a love letter
+                to the shoulder months.
+              </p>
+              <span class="more">
+                View article
+                <span class="arrow-wrap">
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M5 12h14" />
+                    <path d="m13 6 6 6-6 6" />
+                  </svg>
+                </span>
+              </span>
+            </div>
+          </a>
+
+          <a href="#" class="blog-card">
+            <div class="photo">
+              <div
+                class="img"
+                style="
+                  background-image: url(&quot;https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=900&q=85&quot;);
+                "
+              ></div>
+              <span class="cat">Stories</span>
+            </div>
+            <div class="body">
+              <div class="meta">
+                <span>11 Mar 2026</span>
+                <span class="dot"></span>
+                <span>5 min read</span>
+              </div>
+              <h3>Notes from a fjord-side cabin.</h3>
+              <p>
+                Six days off-grid above the Arctic Circle — what we read, what
+                we cooked, what we missed (and didn't miss) about being
+                permanently online.
+              </p>
+              <span class="more">
+                View article
+                <span class="arrow-wrap">
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M5 12h14" />
+                    <path d="m13 6 6 6-6 6" />
+                  </svg>
+                </span>
+              </span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ STATS ============ -->
+    <section class="stats" id="stats">
+      <div class="stats-inner">
+        <div class="stats-head">
+          <div class="eyebrow">
+            <span class="dot"></span><span>By the numbers</span>
+          </div>
+          <h2>A decade of journeys, <em>quietly counted</em>.</h2>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-item">
+            <b>12<em>+</em></b>
+            <div class="label">Years on the road</div>
+            <div class="sub">Since 2014</div>
+          </div>
+          <div class="stat-item">
+            <b>4,200<em>+</em></b>
+            <div class="label">Happy travellers</div>
+            <div class="sub">Across all our trips</div>
+          </div>
+          <div class="stat-item">
+            <b>47</b>
+            <div class="label">Destinations covered</div>
+            <div class="sub">India &amp; abroad</div>
+          </div>
+          <div class="stat-item">
+            <b>9.6<em>/10</em></b>
+            <div class="label">Average rating</div>
+            <div class="sub">Verified reviews</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TESTIMONIALS ============ -->
+    <section class="testimonials" id="testimonials">
+      <div class="testimonials-inner">
+        <div class="testimonials-head">
+          <div class="eyebrow">
+            <span class="dot"></span><span>Traveller stories</span>
+          </div>
+          <h2>Words from the <em>road</em>.</h2>
+          <p class="sub">
+            Letters, postcards, and late-night messages from travellers we've
+            planned with — lightly edited, never staged.
+          </p>
+        </div>
+
+        <div class="test-grid">
+          <div class="test-card">
+            <span class="quote-mark">&ldquo;</span>
+            <span class="stars" aria-label="5 stars">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z" />
+              </svg>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z" />
+              </svg>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z" />
+              </svg>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z" />
+              </svg>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z" />
+              </svg>
+            </span>
+            <blockquote>
+              The Jaipur leg was perfectly paced — long mornings in the palaces,
+              slow lunches, and a sunset rooftop our guide just <em>knew</em>.
+              Felt like a friend planned the whole trip.
+            </blockquote>
+            <div class="author">
+              <span
+                class="avatar"
+                style="
+                  background-image: url(&quot;https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80&quot;);
+                "
+              ></span>
+              <div class="info">
+                <b>Priya M.</b>
+                <span>Jaipur · Heritage tour, Feb 2026</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="test-card">
+            <span class="quote-mark">&ldquo;</span>
+            <span class="stars" aria-label="5 stars">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z" />
+              </svg>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z" />
+              </svg>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z" />
+              </svg>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z" />
+              </svg>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z" />
+              </svg>
+            </span>
+            <blockquote>
+              What I loved most was how stress-free everything felt. Visas,
+              transfers, even the cooking class in Santorini — every detail was
+              handled before I noticed it needed to be.
+            </blockquote>
+            <div class="author">
+              <span
+                class="avatar"
+                style="
+                  background-image: url(&quot;https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80&quot;);
+                "
+              ></span>
+              <div class="info">
+                <b>Daniel R.</b>
+                <span>Santorini · Aegean island-hop, Jan 2026</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="test-card">
+            <span class="quote-mark">&ldquo;</span>
+            <span class="stars" aria-label="5 stars">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z" />
+              </svg>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z" />
+              </svg>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z" />
+              </svg>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z" />
+              </svg>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z" />
+              </svg>
+            </span>
+            <blockquote>
+              The Lofoten cabin was off-grid in the best way. Our guide left us
+              a stocked kitchen, a map drawn on tracing paper, and walked us
+              through the route over coffee.
+            </blockquote>
+            <div class="author">
+              <span
+                class="avatar"
+                style="
+                  background-image: url(&quot;https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80&quot;);
+                "
+              ></span>
+              <div class="info">
+                <b>Ananya K.</b>
+                <span>Lofoten · Hills &amp; fjords, Mar 2026</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer" id="footer">
+      <div class="footer-inner">
+        <!-- Top: brand + newsletter -->
+        <div class="footer-top">
+          <div class="footer-brand">
+            <a href="#" class="brand">
+              <span class="dot"></span>
+              Ostern Reisen<i>.</i>
+            </a>
+            <p>
+              Slow, curated journeys across India and the world &mdash; planned
+              by a small team who would rather sketch a route than sell a
+              package.
+            </p>
+            <div class="contact-row">
+              <a
+                href="/cdn-cgi/l/email-protection#96fef3fafaf9d6eff7e2e4f7b8e2e4f7e0f3fa"
+              >
+                <span class="ico"
+                  ><svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                    <path d="m3 7 9 6 9-6" /></svg
+                ></span>
+                <span
+                  class="__cf_email__"
+                  data-cfemail="28404d4444476851495c5a49065c5a495e4d44"
+                  >[email&#160;protected]</span
+                >
+              </a>
+              <a href="tel:+918012345678">
+                <span class="ico"
+                  ><svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.57 2.8.7A2 2 0 0 1 22 16.92z"
+                    /></svg
+                ></span>
+                +91 80 1234 5678
+              </a>
+              <span>
+                <span class="ico"
+                  ><svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 22s8-7 8-13a8 8 0 1 0-16 0c0 6 8 13 8 13z" />
+                    <circle cx="12" cy="9" r="3" /></svg
+                ></span>
+                Bengaluru &middot; Karnataka, India
+              </span>
+            </div>
+          </div>
+
+          <div class="newsletter">
+            <h4>Letters from the <em>road</em>.</h4>
+            <p>
+              One slow travelogue every month — itineraries, field notes, and
+              the occasional packing list. No spam, ever.
+            </p>
+            <form onsubmit="event.preventDefault()">
+              <input type="email" placeholder="your@email.com" required />
+              <button type="submit">
+                Subscribe
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" />
+                </svg>
+              </button>
+            </form>
+
+            <div class="newsletter-socials">
+              <span class="label">Follow along</span>
+              <a href="#" aria-label="Instagram"
+                ><svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="5" />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" /></svg
+              ></a>
+              <a href="#" aria-label="Pinterest"
+                ><svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M8 23 12 8m0 0 4 8m-4-8a4 4 0 1 1 4 4" /></svg
+              ></a>
+              <a href="#" aria-label="YouTube"
+                ><svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="2" y="5" width="20" height="14" rx="3" />
+                  <path d="m10 9 5 3-5 3z" fill="currentColor" /></svg
+              ></a>
+              <a href="#" aria-label="Facebook"
+                ><svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+                  /></svg
+              ></a>
+              <a href="#" aria-label="X (Twitter)"
+                ><svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                  /></svg
+              ></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Link columns -->
+        <div class="footer-cols">
+          <div class="footer-col">
+            <h5>Explore</h5>
+            <ul>
+              <li><a href="#">Featured destinations</a></li>
+              <li><a href="#">Countries we cover</a></li>
+              <li><a href="#">Hill escapes</a></li>
+              <li><a href="#">Beach getaways</a></li>
+              <li><a href="#">Heritage trails</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h5>Tours</h5>
+            <ul>
+              <li><a href="#">Heritage tours</a></li>
+              <li><a href="#">Cultural trails</a></li>
+              <li><a href="#">Adventure</a></li>
+              <li><a href="#">Private journeys</a></li>
+              <li><a href="#">All itineraries</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h5>Services</h5>
+            <ul>
+              <li><a href="#">Personalised itineraries</a></li>
+              <li><a href="#">Visa &amp; documentation</a></li>
+              <li><a href="#">Flights &amp; transfers</a></li>
+              <li><a href="#">Curated stays</a></li>
+              <li><a href="#">24/7 support</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h5>Company</h5>
+            <ul>
+              <li><a href="#">About us</a></li>
+              <li><a href="#">Our guides</a></li>
+              <li><a href="#">Travel journal</a></li>
+              <li><a href="#">Press &amp; media</a></li>
+              <li><a href="#">Careers</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Bottom row -->
+        <div class="footer-bottom">
+          <div class="copy">
+            &copy; 2026 Ostern Reisen Travels. All rights reserved.
+          </div>
+          <div class="legal">
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Cookies</a>
+            <a href="#">Sitemap</a>
+          </div>
+          <div class="socials">
+            <a href="#" aria-label="Instagram"
+              ><svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" /></svg
+            ></a>
+            <a href="#" aria-label="Pinterest"
+              ><svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M8 23 12 8m0 0 4 8m-4-8a4 4 0 1 1 4 4" /></svg
+            ></a>
+            <a href="#" aria-label="YouTube"
+              ><svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="2" y="5" width="20" height="14" rx="3" />
+                <path d="m10 9 5 3-5 3z" fill="currentColor" /></svg
+            ></a>
+            <a href="#" aria-label="Facebook"
+              ><svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+                /></svg
+            ></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script
+      data-cfasync="false"
+      src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+    ></script>
+    <script>
+      // Each city: city name, italicized accent letters (optional — letters from name shown in coral),
+      // country line, description, headline stat, and 3 image cards.
+      const cities = [
+        {
+          name: "Jaipur",
+          italicChars: 2, // last N chars rendered in italic coral for visual pop
+          country: "Rajasthan · The Pink City",
+          desc: "A walled capital painted in terracotta pink, where Rajput palaces, stepwells, and bazaars unfold beneath the Aravalli hills. Every courtyard is a study in symmetry and shadow.",
+          stat: "18°– 34°",
+          imgs: [
+            {
+              url: "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=600&q=80",
+              label: "Hawa Mahal",
+            },
+            {
+              url: "https://images.unsplash.com/photo-1477587458883-47465ed62890?w=600&q=80",
+              label: "Amber Fort",
+            },
+            {
+              url: "https://images.unsplash.com/photo-1524613032530-449a5d94c285?w=600&q=80",
+              label: "City Palace",
+            },
+          ],
+        },
+        {
+          name: "Varanasi",
+          italicChars: 3,
+          country: "Uttar Pradesh · Banks of the Ganges",
+          desc: "One of the oldest continuously inhabited cities on earth. Stone ghats step down to the river, lamps drift at dusk, and the air carries marigold, incense, and prayer.",
+          stat: "20°– 36°",
+          imgs: [
+            {
+              url: "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?w=600&q=80",
+              label: "Dashashwamedh Ghat",
+            },
+            {
+              url: "https://images.unsplash.com/photo-1561361398-a8b3268d780f?w=600&q=80",
+              label: "Ganga Aarti",
+            },
+            {
+              url: "https://images.unsplash.com/photo-1561369957-4d33d3fafa84?w=600&q=80",
+              label: "Old city lanes",
+            },
+          ],
+        },
+        {
+          name: "Udaipur",
+          italicChars: 3,
+          country: "Rajasthan · City of Lakes",
+          desc: "White marble palaces float on Lake Pichola, mirrored against the Aravalli range. Narrow lanes wind past haveli courtyards, miniature painters, and rooftop cafés.",
+          stat: "19°– 33°",
+          imgs: [
+            {
+              url: "https://images.unsplash.com/photo-1568797629192-789acf8e4df3?w=600&q=80",
+              label: "City Palace",
+            },
+            {
+              url: "https://images.unsplash.com/photo-1585484173186-0eef9f4b6ef0?w=600&q=80",
+              label: "Lake Pichola",
+            },
+            {
+              url: "https://images.unsplash.com/photo-1610116306796-6fea9f4fae38?w=600&q=80",
+              label: "Jag Mandir",
+            },
+          ],
+        },
+        {
+          name: "Hampi",
+          italicChars: 2,
+          country: "Karnataka · Vijayanagara ruins",
+          desc: "Granite boulders and the remains of a 14th-century empire scattered across the Tungabhadra valley. Temples, stepped tanks, and stone chariots emerge from the landscape.",
+          stat: "22°– 35°",
+          imgs: [
+            {
+              url: "https://images.unsplash.com/photo-1605649461784-edc01e6dbfd6?w=600&q=80",
+              label: "Virupaksha Temple",
+            },
+            {
+              url: "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?w=600&q=80",
+              label: "Vittala complex",
+            },
+            {
+              url: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=600&q=80",
+              label: "Boulder fields",
+            },
+          ],
+        },
+        {
+          name: "Madurai",
+          italicChars: 3,
+          country: "Tamil Nadu · Temple city",
+          desc: "Built around the great Meenakshi temple with its painted gopurams rising in every direction. A city of jasmine markets, brass lamps, and centuries-old pilgrimage.",
+          stat: "24°– 36°",
+          imgs: [
+            {
+              url: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=600&q=80",
+              label: "Meenakshi gopuram",
+            },
+            {
+              url: "https://images.unsplash.com/photo-1609920658906-8223bd289001?w=600&q=80",
+              label: "Temple corridors",
+            },
+            {
+              url: "https://images.unsplash.com/photo-1623828931537-39a499826ce6?w=600&q=80",
+              label: "Old town",
+            },
+          ],
+        },
+      ];
+
+      const stack = document.getElementById("stack");
+      const dotsEl = document.getElementById("dots");
+      const rightEl = document.getElementById("right");
+      let idx = 0;
+      let dir = 1;
+      let animating = false;
+
+      document.getElementById("cTotal").textContent = String(
+        cities.length,
+      ).padStart(2, "0");
+
+      cities.forEach((_, i) => {
+        const d = document.createElement("i");
+        d.addEventListener("click", () => goTo(i));
+        dotsEl.appendChild(d);
+      });
+
+      function renderStack(city) {
+        stack.innerHTML = "";
+        city.imgs.forEach((im, i) => {
+          const c = document.createElement("div");
+          c.className = `card c${i}`;
+          c.innerHTML = `
+        <div class="img" style="background-image:url('${im.url}')"></div>
+        <div class="label">${im.label}</div>
+      `;
+          stack.appendChild(c);
+        });
+      }
+
+      function escapeHtml(s) {
+        return s.replace(
+          /[&<>"]/g,
+          (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
+        );
+      }
+
+      function render() {
+        const city = cities[idx];
+        const left = document.querySelector(".left");
+        left.animate(
+          [
+            { opacity: 0, transform: "translateY(10px)" },
+            { opacity: 1, transform: "translateY(0)" },
+          ],
+          { duration: 500, easing: "cubic-bezier(.2,.7,.2,1)" },
+        );
+
+        document.getElementById("cityName").textContent = city.name;
+        document.getElementById("cityCountry").textContent = city.country;
+        document.getElementById("cityDesc").textContent = city.desc;
+        document.getElementById("stat1").textContent = city.stat;
+        const num = String(idx + 1).padStart(2, "0");
+        document.getElementById("cIdx").textContent = num;
+        rightEl.setAttribute("data-num", num);
+
+        renderStack(city);
+
+        [...stack.children].forEach((card, i) => {
+          const fromX = dir > 0 ? 80 : -80;
+          card.animate(
+            [
+              {
+                opacity: 0,
+                transform:
+                  getComputedStyle(card).transform + ` translateX(${fromX}px)`,
+              },
+              { opacity: 1 },
+            ],
+            {
+              duration: 600 + i * 120,
+              easing: "cubic-bezier(.2,.7,.2,1)",
+              fill: "backwards",
+            },
+          );
+        });
+
+        [...dotsEl.children].forEach((d, i) =>
+          d.classList.toggle("on", i === idx),
+        );
+      }
+
+      function goTo(i) {
+        if (animating || i === idx) return;
+        dir = i > idx ? 1 : -1;
+        idx = (i + cities.length) % cities.length;
+        animating = true;
+        render();
+        setTimeout(() => (animating = false), 600);
+      }
+
+      document
+        .getElementById("next")
+        .addEventListener("click", () => goTo(idx + 1));
+      document
+        .getElementById("prev")
+        .addEventListener("click", () => goTo(idx - 1 + cities.length));
+      document
+        .getElementById("nextMobile")
+        .addEventListener("click", () => goTo(idx + 1));
+      document
+        .getElementById("prevMobile")
+        .addEventListener("click", () => goTo(idx - 1 + cities.length));
+
+      // touch swipe (mobile)
+      let touchStartX = null;
+      document.getElementById("hero").addEventListener(
+        "touchstart",
+        (e) => {
+          touchStartX = e.touches[0].clientX;
+        },
+        { passive: true },
+      );
+      document.getElementById("hero").addEventListener("touchend", (e) => {
+        if (touchStartX == null) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) > 40) {
+          if (dx < 0) goTo(idx + 1);
+          else goTo(idx - 1 + cities.length);
+        }
+        touchStartX = null;
+      });
+
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") goTo(idx + 1);
+        if (e.key === "ArrowLeft") goTo(idx - 1 + cities.length);
+      });
+
+      render();
+
+      /* ============ LENIS SMOOTH SCROLLING ============ */
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: "vertical",
+        gestureDirection: "vertical",
+        smooth: true,
+        mouseMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+        infinite: false,
+      });
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+
+      requestAnimationFrame(raf);
+
+      /* ============ NAV interactions ============ */
+      const burger = document.getElementById("burger");
+      const mobileMenu = document.getElementById("mobileMenu");
+      burger.addEventListener("click", () => {
+        mobileMenu.classList.toggle("open");
+      });
+      // close on outside click
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".nav")) mobileMenu.classList.remove("open");
+      });
+      // close on link click
+      mobileMenu.querySelectorAll("a").forEach((a) =>
+        a.addEventListener("click", () => {
+          mobileMenu.classList.remove("open");
+        }),
+      );
+
+      // tours dropdown: click-to-toggle on touch devices
+      const toursLi = document.querySelector(".has-drop");
+      const toursLink = document.getElementById("toursLink");
+      toursLink.addEventListener("click", (e) => {
+        if (window.matchMedia("(hover: none)").matches) {
+          e.preventDefault();
+          toursLi.classList.toggle("open");
+        }
+      });
+
+      // sticky-nav scroll elevation
+      const navEl = document.getElementById("nav");
+      window.addEventListener(
+        "scroll",
+        () => {
+          navEl.classList.toggle("scrolled", window.scrollY > 8);
+        },
+        { passive: true },
+      );
+    </script>
+  </body>
+</html>
